@@ -51,3 +51,61 @@ def wiki_request(params, validate=True):
 
     return response
 
+
+def wiki_languages():
+    """ Function returns all wikipedia language codes available """
+    params = { 'meta': 'siteinfo', 'siprop': 'languages' }
+    response = wiki_request(params)
+
+    return [lang['code'] for lang in response['query']['languages']]
+
+
+def wiki_pages(continue_param=None):
+    """ Function returns a list of all Wikipedia page ids """
+    params = {
+        'list': 'allpages',
+        'aplimit': 'max',
+        'continue': continue_param
+    }
+
+    response = wiki_request(params)
+    if 'continue' in response and 'apcontinue' in response['continue']:
+        continue_result = response['continue']['apcontinue']
+    else:
+        continue_result = None
+
+    result = [page['pageid'] for page in response['query']['allpages']]
+    return result, continue_result
+
+
+def wiki_page(pageids=None, titles=None, revids=None, prop=['content'], limit=None):
+    """
+    Function that returns all revisions of a page
+    pageids, titles, revids - parameters, that define what page or revision
+    do you want to get
+    prop - parameter that defines what exactly you want to get from the page
+    (user, content, timestamp, etc.)
+    limit - how many results you want to get (Wikipedia API defaults to 1)
+    """
+    if not(pageids or titles or revids):
+        raise ValueError('Either page name, id or revision id should be set')
+
+    params = {
+        'prop': 'revisions',
+        'rvprop': '|'.join(prop),
+        'titles': '|'.join(titles) if titles else None,
+        'pageids': '|'.join(pageids) if pageids else None,
+        'revids': '|'.join(revids) if revids else None,
+        'rvlimit': limit
+    }
+
+    response = wiki_request(params)
+    print(response)
+
+    pages = response['query']['pages']
+    result = {}
+
+    for item in pages:
+        result[item['pageid'] or item['title']] = item['revisions']
+
+    return result

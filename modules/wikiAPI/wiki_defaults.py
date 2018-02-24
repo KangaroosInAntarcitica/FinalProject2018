@@ -1,3 +1,5 @@
+# some of the useful default variables for wikipedia.py are defined here
+
 WIKI_URL = 'http://en.wikipedia.org/w/api.php'
 USER_AGENT = 'BOT Wikipedia National Geography Proj' + \
              '(https://github.com/KangaroosInAntarcitica/FinalProject2018' + \
