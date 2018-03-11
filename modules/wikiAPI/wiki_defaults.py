@@ -1,8 +1,8 @@
 # some of the useful default variables for wikipedia.py are defined here
 
 WIKI_URL = 'http://en.wikipedia.org/w/api.php'
-USER_AGENT = 'BOT Wikipedia National Geography Proj' + \
-             '(https://github.com/KangaroosInAntarcitica/FinalProject2018' + \
+USER_AGENT = 'BOT Wikipedia National Geography Proj' \
+             '(https://github.com/KangaroosInAntarcitica/FinalProject2018' \
              '| Andriyd909@gmail.com)'
 
 REQUEST_TIMEOUT = 10
@@ -35,10 +35,14 @@ possible_params = {
 }
 
 short_form = {
-    'revisions': 'rv',
+    'categories': 'cl',
+    'categoryinfo': 'ci',
     'contributors': 'pc',
+    'deletedrevisions': 'drv',
+    'revisions': 'rv',
     'langlinks': 'll',
     'backlinks': 'bl',
     'allpages': 'ap',
-    'allrevisions': 'arv'
+    'allrevisions': 'arv',
+
 }

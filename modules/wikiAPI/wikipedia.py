@@ -1,5 +1,5 @@
 import requests
-from wiki_defaults import *
+from .wiki_defaults import *
 
 
 def set_lang(lang):
