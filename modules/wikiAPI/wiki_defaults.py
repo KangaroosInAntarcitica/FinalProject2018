@@ -1,13 +1,13 @@
 # some of the useful default variables for wikipedia.py are defined here
 
-WIKI_URL = 'http://en.wikipedia.org/w/api.php'
+WIKI_URL = 'http://%s.wikipedia.org/w/api.php'
 USER_AGENT = 'BOT Wikipedia National Geography Proj' \
              '(https://github.com/KangaroosInAntarcitica/FinalProject2018' \
              '| Andriyd909@gmail.com)'
 
-REQUEST_TIMEOUT = 10
+TIMEOUT = 10
 
-default_parameters = {
+PARAMETERS = {
     'action': 'query',
     'format': 'json',
     'formatversion': '2'
@@ -31,7 +31,10 @@ possible_params = {
              'recentchanges', 'search', 'tags', 'usercontribs', 'users',
              'watchlist','watchlistraw'),
     'format': ('json'),
-    'formatversion': ('1', '2')
+    # 'jsonfm', 'none', 'php', 'xml', 'wddx', 'dump', 'txt', 'dbg', 'yaml'
+    'formatversion': ('1', '2'),
+    'callback': (),
+    'utf-8': ('')
 }
 
 short_form = {
@@ -44,5 +47,9 @@ short_form = {
     'backlinks': 'bl',
     'allpages': 'ap',
     'allrevisions': 'arv',
+}
 
+RESPONSE = {
+    'pages': {'pageid': 'int64', 'ns': 'int64', 'title': str},
+    'revisions': {'user': str, 'timestamp': str}
 }

@@ -13,8 +13,8 @@ def set_user_agent(user_agent):
     USER_AGENT = user_agent
 
 def set_timeout(request_timeout):
-    """ Set the global REQUEST_TIMEOUT parameter """
-    REQUEST_TIMEOUT = request_timeout
+    """ Set the global TIMEOUT parameter """
+    TIMEOUT = request_timeout
 
 def check_params(params, possible_params):
     """ Function to check for parameter validity. """
@@ -31,15 +31,15 @@ def wiki_request(params, validate=True):
     headers = { 'User-Agent': USER_AGENT }
 
     # set to default the parameters that could not be found
-    for key in default_parameters:
-        params[key] = params.get(key, default_parameters[key])
+    for key in PARAMETERS:
+        params[key] = params.get(key, PARAMETERS[key])
 
     # check whether parameters are right or not
     if validate:
         check_params(params, possible_params)
 
     response = requests.get(WIKI_URL, params=params, headers=headers,
-                     verify=True, timeout=REQUEST_TIMEOUT).json()
+                     verify=True, timeout=TIMEOUT).json()
 
     # check for any errors
     if 'error' in response:
