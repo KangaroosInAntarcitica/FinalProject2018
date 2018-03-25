@@ -10,10 +10,10 @@ TIMEOUT = 10
 PARAMETERS = {
     'action': 'query',
     'format': 'json',
-    'formatversion': '2'
+    'formatversion': '1'
 }
 
-possible_params = {
+all_params = {
     'action': ('query', 'edit', 'help'),
     'meta': ('allmessages', 'filerepoinfo', 'siteinfo', 'tokens', 'userinfo'),
     'prop': ('categories', 'categoryinfo', 'contributors', 'deletedrevisions',
@@ -50,6 +50,5 @@ short_form = {
 }
 
 RESPONSE = {
-    'pages': {'pageid': 'int64', 'ns': 'int64', 'title': str},
-    'revisions': {'user': str, 'timestamp': str}
+    'pages': {'pageid': 'int64', 'ns': 'int64', 'title': str}
 }

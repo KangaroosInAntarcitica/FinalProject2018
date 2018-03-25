@@ -36,7 +36,7 @@ def wiki_request(params, validate=True):
 
     # check whether parameters are right or not
     if validate:
-        check_params(params, possible_params)
+        check_params(params, all_params)
 
     response = requests.get(WIKI_URL, params=params, headers=headers,
                      verify=True, timeout=TIMEOUT).json()

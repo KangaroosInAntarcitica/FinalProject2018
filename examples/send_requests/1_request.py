@@ -5,7 +5,7 @@ import wikiAPI
 
 """
 This the first example of sending requests. It is recommended to take all the
-examples from start ro better understand.
+examples from start for better understanding.
 
 We will now send a props query.
 
@@ -18,9 +18,11 @@ want to spend extra storage on useless data.
 We do that in the response_table, revisions attribute: all the data we need and
 the datatype it needs to represented with
 
-We then create a request object - it sends request
-and a response object - it takes data from response in its update function and
-stores it inside.
+We then create a request object - it sends requests
+and a response object - it takes data from response and stores it
+
+NOTE: on_response param can be Response obj (one containing update method)
+or a normal function (all the data will be given as parameter)
 NOTE: you could replace on_response param with print function to understand
 what exactly is going on in the response
 """
@@ -36,11 +38,9 @@ response_table = {
 }
 
 # create a response handler - Object with update function
-response = wikiAPI.WikiResponseProp(response_table)
+response = wikiAPI.WikiResponse(response_table)
 
 # create a request with all the parameters, send it and show the results
-# note that we specify the response.update as the function that is called when
-# we get our response.
-request = wikiAPI.WikiRequest(params, on_response=response.update)
+request = wikiAPI.WikiRequest(params, on_response=response)
 request.send_all()
 print(response.show())

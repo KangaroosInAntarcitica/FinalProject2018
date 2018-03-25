@@ -29,8 +29,8 @@ response_table = {
     }
 }
 
-response = wikiAPI.WikiResponseProp(response_table)
-request = wikiAPI.WikiRequestMultiplePage(params, on_response=response.update, max=1)
+response = wikiAPI.WikiResponse(response_table)
+request = wikiAPI.WikiRequestMultiplePage(params, on_response=response, max=1)
 request.send_all()
 
-print(response.pages)
+print(response.show())

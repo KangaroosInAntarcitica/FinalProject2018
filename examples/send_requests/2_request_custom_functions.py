@@ -22,8 +22,10 @@ return a tuple or list of values for each of them. This might be used to make
 the program faster and not to parse the same information twice.
 """
 
+
 def to_date(revision, page):
     return datetime.datetime.strptime(revision['timestamp'], "%Y-%m-%dT%H:%M:%SZ")
+
 
 params = {
     'prop': 'revisions', 'rvprop': 'user|timestamp', 'rvlimit': 'max',
@@ -42,9 +44,9 @@ custom = {
 }
 
 # create a response handler - Object with update function
-response = wikiAPI.WikiResponseProp(response_table, custom=custom)
+response = wikiAPI.WikiResponse(response_table, custom=custom)
 
 # create a request with all the parameters, send it and show the results
-request = wikiAPI.WikiRequest(params, on_response=response.update)
+request = wikiAPI.WikiRequest(params, on_response=response)
 request.send_all()
 print(response.show())

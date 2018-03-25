@@ -8,8 +8,7 @@ In the previous examples we used the props to get our information from API
 Now we will use the the list - it is used for slightly different queries
 and returns a different value (which you shouldn't bother about)
 
-The point is we need to use wikiAPI.WikiResponseList object for this example
-Everything else basically stays the same
+We will use the same wikiAPI.WikiResponse object here
 
 We will send a request to get allpages of Wikipedia.
 The information we need is specified in the response table - pageid, title, ns
@@ -42,9 +41,9 @@ response_table = {
     }
 }
 
-response = wikiAPI.WikiResponseList(response_table)
+response = wikiAPI.WikiResponse(response_table)
 
-request = wikiAPI.WikiRequest(params, on_response=response.update)
+request = wikiAPI.WikiRequest(params, on_response=response)
 for i in range(10):
     request.send()
 
