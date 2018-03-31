@@ -23,6 +23,11 @@ class SafeRequest:
             raise ValueError('State_file should be a string.')
         if not isinstance(save_every, int):
             raise ValueError('Save_every should be a digit.')
+        if hasattr(on_response, 'save_every') and \
+                isinstance(on_response.save_every, int) and \
+                save_every % on_response.save_every != 0:
+            raise ValueError('Request and response save_every are different!')
+
         self.state_file = state_file
         self.save_every = save_every
 

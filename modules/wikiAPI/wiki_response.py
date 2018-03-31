@@ -57,7 +57,8 @@ class WikiResponse:
             self.data = pandas.DataFrame(columns=columns.keys())
 
         # change data types
-        self.data = self.data.astype(columns)
+        if isinstance(columns, dict):
+            self.data = self.data.astype(columns)
 
     def update(self, query):
         """
