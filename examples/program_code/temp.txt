@@ -1,0 +1,1 @@
+{'prop': 'revisions', 'rvprop': 'content'} {'count': 15600, 'params': {'rvprop': 'content', 'action': 'query', 'format': 'json', 'formatversion': '1', 'prop': 'revisions'}, 'current_page': 780000}

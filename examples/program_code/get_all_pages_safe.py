@@ -7,7 +7,7 @@ import wikiAPI
 This code can be used to get all pages for a specific language
 """
 
-FILE = '%s_all_pages.csv'
+FILE = '%s_all_pages_safe.csv'
 LANG = 'uk'
 STATE_FILE = 'temp.txt'
 
@@ -15,7 +15,8 @@ STATE_FILE = 'temp.txt'
 def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
     assert isinstance(language, str) and len(language) == 2, \
         'Language should be a 2 char code: en, uk, etc.'
-    assert isinstance(file, (str, None)), 'File should be file path string.'
+    assert file is None or isinstance(file, str), \
+        'File should be file path string.'
     assert isinstance(state_file, str), \
         'State File should be file path string.'
     file = file if file else FILE % language

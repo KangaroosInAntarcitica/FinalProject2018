@@ -112,8 +112,9 @@ class WikiRequestMultiplePage(WikiRequest):
         if isinstance(self.multiple_params, (str, int, float)):
             current = self.multiple_params
         elif isinstance(self.multiple_params, (list, tuple, pandas.Series)):
-            current = '|'.join(self.multiple_params
-                               [self.current_page:self.current_page + self.max])
+            current = '|'.join(
+                map(str, self.multiple_params
+                [self.current_page:self.current_page + self.max]))
         else:
             raise ValueError('Mult. parm can only be list, tuple, series')
 

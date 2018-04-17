@@ -124,6 +124,8 @@ class WikiResponse:
             for key in self.response_table[self.data_name]:
                 # if in custom
                 if key in custom_item:
+                    if custom_item[key] is None:
+                        custom_item[key] = NaN
                     all_data[key].append(custom_item[key])
                 elif key in data_item:
                     all_data[key].append(data_item[key])
