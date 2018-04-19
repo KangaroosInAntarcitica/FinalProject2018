@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <style type="text/css">
+        body {
+            font: 300 13px "Helvetica Neue", Helvetica;
+        }
+
+        path {
+            fill: #ccc;
+            stroke: #F60;
+        }
+
+        circle {
+            stroke-width: 0.5px;
+            vector-effect: non-scaling-stroke
+        }
+
+        circle.f {
+            stroke: #ffffff;
+            fill-opacity: 0.8
+        }
+
+        circle.m {
+            stroke: #ffffff;
+            fill-opacity: 0.8
+        }
+    </style>
+</head>
+<body>
+
+<div id="chart"></div>
+<script type="text/javascript" src="file/d3.v3.min.js"></script>
+<script type="text/javascript" src="/file/d3.geo.js"></script>
+<script type="text/javascript">
+
+    // Pretty circles --------->
+    color = d3.scale.linear()
+        .domain([12, 30])
+        .range(["red", "green"]);
+
+    size = d3.scale.linear()
+        .domain([0, 10]);
+    // <----- Pretty circles
+    var countryFeature;
+    var datacentreFeature;
+    var projection = d3.geo.azimuthal()
+        .scale(380)
+        .origin([-71.03, 42.37])
+        .mode('orthographic')
+        .translate([400, 400]);
+    //640 400
+    var circle = d3.geo.greatCircle().origin(projection.origin());
+    // TODO fix d3.geo.azimuthal to be consistent with scale
+    var scale = {
+        orthographic: 380, stereographic: 380, gnomonic: 380,
+        equidistant: 380 / Math.PI * 2, equalarea: 380 / Math.SQRT2
+    };
+    var path = d3.geo.path().projection(projection);
+    var svg = d3.select("#chart").append('svg:svg')
+        .attr('width', 800)
+        .attr('height', 600)
+        .on('mousedown', mousedown);
+    var countries = svg.append('g')
+        .attr('width', 800)
+        .attr('height', 600)
+        .attr('id', 'countries');
+    var datacentres = svg.append('g')
+        .attr('width', 800)
+        .attr('height', 600)
+        .attr('id', 'datacentres');
+
+    d3.json('file/world.json', function (collection) {
+        console.log(collection);
+        countryFeature = countries.selectAll('path')
+            .data(collection.features)
+            .enter().append('svg:path')
+            .attr('d', clip);
+
+        countryFeature.append("svg:title").text(function (d) {
+            return d.properties.name;
+        }).attr('text-anchor', 'middle');
+    });
+
+    fetch('/file/uk_all_page_coords_clear.csv')
+        .catch(function(error){ throw error; })
+        .then(function(data){ return data.text(); })
+        .then(function(data){
+            function getCoords(line) {
+                var coords;
+
+                line = line.split('\t');
+                if (line.length > 2)
+                    coords = [line[1], line[2]].map(parseFloat);
+                else
+                    coords = [null, null];
+
+                var point = {
+                    'type': 'Feature',
+                    'coordinates': coords,
+                    'properties': {}
+                };
+                return point;
+            }
+
+            data = data.split('\n');
+            data = data.slice(1, data.length);
+            data = data.map(getCoords);
+            data = {'type': 'FeatureCollection', 'features': data};
+
+            return data
+        })
+        .then(function(wikiData){
+            window.datacentreFeature = datacentres.selectAll('g')
+                .data(wikiData)
+                .enter()
+                .append('g')
+                .append('svg:circle')
+                .attr('r', function (d) {
+                    return 10;
+                })
+                //return size(ballSize(d.properties.kgCO2e))
+                .attr("fill", function (d) {
+                    return color((10 * Math.exp((1 - d.properties.kgCO2e), 2)));
+                });
+
+            console.log(wikiData);
+
+            window.datacentreFeature = datacentres.selectAll('g');
+        });
+
+
+
+    d3.select(window).on('mousemove', mousemove)
+        .on('mouseup', mouseup);
+    d3.select('select').on('change',
+        function () {
+            projection.mode(this.value).scale(scale[this.value]);
+            refresh(750);
+        });
+    var m0, o0;
+
+    function mousedown() {
+        m0 = [d3.event.pageX, d3.event.pageY];
+        o0 = projection.origin();
+        d3.event.preventDefault();
+    }
+
+    function mousemove() {
+        if (m0) {
+            var m1 = [d3.event.pageX, d3.event.pageY],
+                o1 = [o0[0] + (m0[0] - m1[0]) / 8, o0[1] + (m1[1] - m0[1]) / 8];
+            projection.origin(o1);
+            circle.origin(o1);
+            refresh();
+        }
+    }
+
+    function mouseup() {
+        if (m0) {
+            mousemove();
+            m0 = null;
+        }
+    }
+
+    function refresh(duration) {
+        (duration ?
+            countryFeature.transition().duration(duration)
+            : countryFeature)
+            .attr('d', clip);
+
+        (duration ?
+            datacentreFeature.transition().duration(duration)
+            : datacentreFeature)
+            .attr('transform', function (d) {
+                return "translate(" + clip(d) + ")";
+            });
+
+    }
+
+    function clip(d) {
+        return path(circle.clip(d));
+    }
+
+    function ballSize(datum) {
+        return (datum.kgCO2e > 1) ? 10 : (10 * Math.exp((1 - datum.kgCO2e), 2));
+    }
+
+    function assignClass(datum) {
+        return (datum.kgCO2e > 0.2) ? "f" : "m";
+    }
+</script>
+</body>
+</html>

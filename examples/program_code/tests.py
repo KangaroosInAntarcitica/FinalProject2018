@@ -28,9 +28,12 @@ def round_coord(all):
 
 
 df = pandas.read_csv('uk_all_page_coords.csv', sep='\t')
-df = pandas.DataFrame().append(df[~df['coordinates'].isnull()],
+df = pandas.DataFrame().append(df[~df['lat'].isnull()],
                                ignore_index=True)
 
+df.to_csv('uk_all_page_coords_clear.csv', index=0, header=1, sep='\t')
+
+"""
 df = df.apply(round_coord, axis=1)
 print(df)
 
@@ -55,5 +58,4 @@ plt.axis([-180, 180, -90, 90])
 plt.plot(df['long'], df['lat'], marker='o', color='#FF000022', markersize=1, linestyle='')
 plt.savefig('result.png', dpi=200, transparent=True)
 
-
-
+"""
