@@ -5,11 +5,29 @@
     <style type="text/css">
         body {
             font: 300 13px "Helvetica Neue", Helvetica;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
         }
 
         path {
             fill: #b0daff;
             stroke: #FFF;
+        }
+
+        .circle-path {
+            fill: #F002;
+            stroke: none;
+            stroke-width: 1px;
         }
 
         circle {
@@ -30,10 +48,23 @@
 </head>
 <body>
 
-<div id="chart"></div>
+<div class="container">
+    <div id="chart"></div>
+</div>
+
 <script type="text/javascript" src="file/d3.v3.min.js"></script>
-<script type="text/javascript" src="/file/d3.geo.js"></script>
+<script type="text/javascript" src="file/d3.geo.js"></script>
 <script type="text/javascript">
+    var extra = 100;
+    var width = document.body.clientWidth;
+    var height = document.body.clientHeight - extra;
+
+    if(width > height)
+        width = height;
+    else
+        height = width;
+    width = width;
+    height = height;
 
     // Pretty circles --------->
     color = d3.scale.linear()
@@ -50,8 +81,8 @@
         .scale(380)
         .origin([-71.03, 42.37])
         .mode('orthographic')
-        .translate([400, 400]);
-    //640 400
+        .translate([width / 2, height / 2]);
+
     var circle = d3.geo.greatCircle().origin(projection.origin());
     // TODO fix d3.geo.azimuthal to be consistent with scale
     var scale = {
@@ -60,19 +91,21 @@
     };
     var path = d3.geo.path().projection(projection);
     var svg = d3.select("#chart").append('svg:svg')
-        .attr('width', 800)
-        .attr('height', 600)
+        .attr('width', width)
+        .attr('height', height)
         .on('mousedown', mousedown);
     var countries = svg.append('g')
-        .attr('width', 800)
-        .attr('height', 600)
+        .attr('width', width)
+        .attr('height', height)
         .attr('id', 'countries');
     var datacentres = svg.append('g')
-        .attr('width', 800)
-        .attr('height', 600)
+        .attr('width', width)
+        .attr('height', height)
         .attr('id', 'datacentres');
 
+
     d3.json('file/world.json', function (collection) {
+
         countryFeature = countries.selectAll('path')
             .data(collection.features)
             .enter().append('svg:path')
@@ -81,26 +114,26 @@
         countryFeature.append("svg:title").text(function (d) {
             return d.properties.name;
         }).attr('text-anchor', 'middle');
-
     });
 
-    d3.json('file/uk_all_page_coords_clear.json', function(data) {
+    d3.json('file/uk_all_page_coords_clear.json', function (json) {
         datacentreFeature = datacentres.selectAll('g')
-                .data(data.features)
-                .enter()
-                // .append('g')
-                .attr('d', clip)
-                .append('svg:circle')
-                .attr('r', function (d) {
-                    return 10;
-                })
-                .attr('cx', function(d){ return d.geometry.coordinates[0] })
-                .attr('cy', function(d){ return d.geometry.coordinates[1] })
-                // return size(ballSize(d.properties.kgCO2e))
-                .attr("fill", function (d) {
-                    return color((10 * Math.exp((1 - d.properties.kgCO2e), 2)));
-                });
-        console.log(countryFeature);
+            .data(json.features)
+            .enter()
+            .append('svg:path')
+            .attr('d', clip)
+            .attr('class', 'circle-path');
+            // .append('svg:circle')
+            // .attr('r', function (d) {
+            //     return 1;
+            // })
+            // .attr("fill", '#FFF');
+
+        datacentreFeature.append("svg:title").text(function (d) {
+            return d.properties.title;
+        }).attr('text-anchor', 'middle');
+
+        datacentreFeature = datacentres.selectAll('path');
         console.log(datacentreFeature);
     });
 
@@ -151,7 +184,7 @@
     }
 
     function clip(d) {
-        return clip = path(circle.clip(d));
+        return path(circle.clip(d));
     }
 
     function ballSize(datum) {

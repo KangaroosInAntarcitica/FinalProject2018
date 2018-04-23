@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request
 from os import path
+from convert import convert
 
 app = Flask(__name__, template_folder='', static_url_path='/wiki')
 
 
 @app.route('/')
 def index():
-    return render_template('azimuthal.html')
+    return render_template('datacentres.html')
 
 
 @app.route('/file/<name>')
@@ -18,6 +19,9 @@ def get_data(name):
         return open(current, 'r', encoding='utf-8').read()
     elif path.isfile(parent):
         return open(parent, 'r', encoding='utf-8').read()
-
+    elif path.isfile(current.replace('json', 'csv')):
+        return convert(current)
+    elif path.isfile(parent.replace('json', 'csv')):
+        return convert(parent)
 
 app.run(debug=1, port=5000)
