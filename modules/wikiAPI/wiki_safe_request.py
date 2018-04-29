@@ -122,7 +122,7 @@ class SafeRequest:
                         # change current state
                         result += self.param_key + ' ' + safe_dict + '\n'
                         found = True
-                    else:
+                    elif line:
                         result += line + '\n'
 
                 if not found:

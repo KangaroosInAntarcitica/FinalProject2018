@@ -14,7 +14,7 @@ LANG = 'uk'
 STATE_FILE = 'temp.txt'
 
 
-def get_all_pages(file_from=None, file_to=None,
+def get_page_coordinates(file_from=None, file_to=None,
                   language=LANG, state_file=STATE_FILE):
 
     assert isinstance(language, str) and len(language) == 2, \
@@ -80,4 +80,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_all_pages, file_from='uk_all_pages_safe.csv')
+    timeit(get_page_coordinates, file_from='uk_all_pages_safe.csv')

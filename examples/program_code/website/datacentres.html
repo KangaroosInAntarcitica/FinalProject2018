@@ -3,20 +3,20 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <style type="text/css">
-        body {
+        html, body {
             font: 300 13px "Helvetica Neue", Helvetica;
             margin: 0;
             width: 100vw;
             height: 100vh;
         }
 
-        .container {
+        #container {
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100%;
         }
 
         path {
@@ -28,6 +28,10 @@
             fill: #F002;
             stroke: none;
             stroke-width: 1px;
+        }
+
+        .circle-none {
+            display: none;
         }
 
         circle {
@@ -44,156 +48,160 @@
             stroke: #ffffff;
             fill-opacity: 0.8
         }
+
+        #smallMap path {
+            fill: #5aa8ff;
+            stroke: #FFF;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 220px;
+            width: 160px;
+
+            position: fixed;
+            left: calc(50% - 80px);
+        }
+        .controls-show {
+            bottom: 10px;
+        }
+        .controls-hide {
+            bottom: calc(10px - 190px);
+        }
+
+        #buttons {
+            height: 40px;
+            width: 200px;
+            display: flex;
+            flex-direction: row;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        #buttons > button {
+            height: 40px;
+            width: 25%;
+            margin: 1px;
+            border: none;
+            outline: none;
+            background-color: #23bc3e;
+
+            font-size: 20px;
+            color: #FFF;
+        }
+        #buttons > button:hover {
+            background-color: #229a37;
+        }
+
+        #scrollableParentSmallMap {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        #scrollableSmallMap {
+            position: absolute;
+            overflow-y: scroll;
+            width: 200px;
+            height: 160px;
+        }
+        #scrollableFillSmallMap {
+            width: 160px;
+            height: 4000px;
+        }
+
+        #smallMapContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 160px;
+            height: 160px;
+            margin: 10px;
+            border-radius: 5px;
+            /*border: 2px solid #23bc3e;*/
+        }
+        #bottomControls {
+            width: 400px;
+            height: 180px;
+            background-color: #FFF;
+            border-radius: 5px;
+            border: 2px solid #23bc3e;
+
+            display: flex;
+            flex-direction: row;
+        }
+        .bottomButtons {
+            width: 110px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+        }
+        .bottomButtons > div {
+            width: 100px;
+            border: none;
+            outline: none;
+            background-color: #23bc3e;
+            border-radius: 5px;
+            color: #FFF;
+            font-size: 16px;
+            height: 28px;
+            margin: 5px;
+            text-align: center;
+            padding-top: 7px;
+        }
+        .bottomButtons > div:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        .bottomButtons > .red {
+            background-color: #ff3620;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="container">
     <div id="chart"></div>
+    <div id="controls" class="controls-hide">
+        <div id="buttons">
+            <!-- <button onclick=""> < </button> -->
+            <button onclick="scaleMap('-')"> - </button>
+            <button onclick="showBottom()"> ▼▲ </button>
+            <button onclick="scaleMap('+')"> + </button>
+            <!-- <button onclick=""> > </button> -->
+        </div>
+        <div id="bottomControls">
+            <div class="bottomButtons">
+
+            </div>
+            <div id="scrollableParentSmallMap">
+                <div id="smallMapContainer">
+                    <div id="smallMap"> </div>
+                </div>
+                <div id="scrollableSmallMap" onscroll="scale()">
+                    <div id="scrollableFillSmallMap"></div>
+                </div>
+            </div>
+            <div class="bottomButtons">
+                <div id="scaleInfo"> Scale: 1 </div>
+                <div onclick="configureSmall()" class="red"> Open </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <script type="text/javascript" src="file/d3.v3.min.js"></script>
 <script type="text/javascript" src="file/d3.geo.js"></script>
-<script type="text/javascript">
-    var extra = 100;
-    var width = document.body.clientWidth;
-    var height = document.body.clientHeight - extra;
-
-    if(width > height)
-        width = height;
-    else
-        height = width;
-    width = width;
-    height = height;
-
-    // Pretty circles --------->
-    color = d3.scale.linear()
-        .domain([12, 30])
-        .range(["red", "green"]);
-
-    size = d3.scale.linear()
-        .domain([0, 10]);
-    // <----- Pretty circles
-
-    var countryFeature;
-    var datacentreFeature;
-    var projection = d3.geo.azimuthal()
-        .scale(380)
-        .origin([-71.03, 42.37])
-        .mode('orthographic')
-        .translate([width / 2, height / 2]);
-
-    var circle = d3.geo.greatCircle().origin(projection.origin());
-    // TODO fix d3.geo.azimuthal to be consistent with scale
-    var scale = {
-        orthographic: 380, stereographic: 380, gnomonic: 380,
-        equidistant: 380 / Math.PI * 2, equalarea: 380 / Math.SQRT2
-    };
-    var path = d3.geo.path().projection(projection);
-    var svg = d3.select("#chart").append('svg:svg')
-        .attr('width', width)
-        .attr('height', height)
-        .on('mousedown', mousedown);
-    var countries = svg.append('g')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('id', 'countries');
-    var datacentres = svg.append('g')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('id', 'datacentres');
-
-
-    d3.json('file/world.json', function (collection) {
-
-        countryFeature = countries.selectAll('path')
-            .data(collection.features)
-            .enter().append('svg:path')
-            .attr('d', clip);
-
-        countryFeature.append("svg:title").text(function (d) {
-            return d.properties.name;
-        }).attr('text-anchor', 'middle');
-    });
-
-    d3.json('file/uk_all_page_coords_clear.json', function (json) {
-        datacentreFeature = datacentres.selectAll('g')
-            .data(json.features)
-            .enter()
-            .append('svg:path')
-            .attr('d', clip)
-            .attr('class', 'circle-path');
-            // .append('svg:circle')
-            // .attr('r', function (d) {
-            //     return 1;
-            // })
-            // .attr("fill", '#FFF');
-
-        datacentreFeature.append("svg:title").text(function (d) {
-            return d.properties.title;
-        }).attr('text-anchor', 'middle');
-
-        datacentreFeature = datacentres.selectAll('path');
-        console.log(datacentreFeature);
-    });
-
-
-    d3.select(window).on('mousemove', mousemove)
-        .on('mouseup', mouseup);
-    d3.select('select').on('change',
-        function () {
-            projection.mode(this.value).scale(scale[this.value]);
-            refresh(750);
-        });
-    var m0, o0;
-
-    function mousedown() {
-        m0 = [d3.event.pageX, d3.event.pageY];
-        o0 = projection.origin();
-        d3.event.preventDefault();
-    }
-
-    function mousemove() {
-        if (m0) {
-            var m1 = [d3.event.pageX, d3.event.pageY],
-                o1 = [o0[0] + (m0[0] - m1[0]) / 8, o0[1] + (m1[1] - m0[1]) / 8];
-            projection.origin(o1);
-            circle.origin(o1);
-            refresh();
-        }
-    }
-
-    function mouseup() {
-        if (m0) {
-            mousemove();
-            m0 = null;
-        }
-    }
-
-    function refresh(duration) {
-        (duration ?
-            countryFeature.transition().duration(duration)
-            : countryFeature)
-            .attr('d', clip);
-
-        (duration ?
-            datacentreFeature.transition().duration(duration)
-            : datacentreFeature)
-            .attr('d', clip);
-
-    }
-
-    function clip(d) {
-        return path(circle.clip(d));
-    }
-
-    function ballSize(datum) {
-        return (datum.kgCO2e > 1) ? 10 : (10 * Math.exp((1 - datum.kgCO2e), 2));
-    }
-
-    function assignClass(datum) {
-        return (datum.kgCO2e > 0.2) ? "f" : "m";
-    }
-</script>
+<script type="text/javascript" src="file/mainMap.js"> </script>
+<script type="text/javascript" src="file/smallMap.js"></script>
 </body>
 </html>

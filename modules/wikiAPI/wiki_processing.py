@@ -1,3 +1,5 @@
+import datetime
+
 def get_coordinates(data_item):
     """
     Function gets all coordinates from data - page content
@@ -92,3 +94,11 @@ def get_coordinates_data(data_item):
         lat, long = None, None
 
     return coordinates, lat, long
+
+
+def to_date(data_item):
+    """
+    Function gets date from the data
+    """
+    return datetime.datetime.strptime\
+        (data_item['timestamp'], "%Y-%m-%dT%H:%M:%SZ")
