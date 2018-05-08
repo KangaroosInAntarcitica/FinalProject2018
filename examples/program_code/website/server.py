@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder='', static_url_path='/wiki')
 
 @app.route('/')
 def index():
-    return render_template('datacentres2.html')
+    return render_template('topographic.html')
 
 
 @app.route('/file/<name>')
@@ -18,7 +18,7 @@ def get_data(name):
     if path.isfile(current):
         return open(current, 'r', encoding='utf-8').read()
     elif path.isfile(parent):
-        return open(parent, 'r', encoding='utf-8').read()
+        return ''.join(open(parent, 'r', encoding='utf-8').readlines()[:])
     elif path.isfile(current.replace('json', 'csv')):
         return convert(current)
     elif path.isfile(parent.replace('json', 'csv')):

@@ -31,7 +31,7 @@ def convert(file_name, save=False, *args, **kwargs):
 
     data = data.split('\n')[1:]
     data = [*map(get_coords, data)][:-1]
-    data = data[0:500]
+    data = data[:2000]
     data = {'type': 'FeatureCollection', 'features': data}
 
     if save:

@@ -15,85 +15,26 @@ var scale = {
 var currentScale = 300;
 var defaultScale = 300;
 
-var projection = d3.geo.azimuthal()
-    .scale(currentScale)
-    .origin([0, 0])
-    .mode('orthographic')
-    // .clipAngle(90)
+var projection = d3.geo.mercator()
     .translate([width / 2, height / 2]);
-
-var circle = d3.geo.greatCircle().origin(projection.origin());
 
 var path = d3.geo.path().projection(projection);
 var svg = d3.select("#chart").append('svg:svg')
     .attr('width', width)
     .attr('height', height)
-    .on('mousedown', mousedown);
-var countries = svg.append('g')
-    .attr('width', width)
-    .attr('height', height)
-    .attr('id', 'countries');
-var dataCentres = svg.append('g')
-    .attr('width', width)
-    .attr('height', height)
-    .attr('id', 'dataCentres');
 
 
 d3.json('file/world.json', function (collection) {
     countryFeature = countries.selectAll('path')
         .data(collection.features)
         .enter().append('svg:path')
-        .attr('d', clip);
+        // .attr('d', clip);
 
     countryFeature.append("svg:title").text(function (d) {
         return d.properties.name;
     }).attr('text-anchor', 'middle');
 });
 
-
-d3.select(window).on('mousemove', mousemove).on('mouseup', mouseup);
-var m0, o0;
-
-function mousedown() {
-    m0 = [d3.event.pageX, d3.event.pageY];
-    o0 = projection.origin();
-    d3.event.preventDefault();
-}
-
-function mousemove() {
-    if (m0) {
-        var m1 = [d3.event.pageX, d3.event.pageY];
-
-        var o1 = [o0[0] + (m0[0] - m1[0]) * (300 / currentScale / 8),
-            o0[1] + (m1[1] - m0[1]) * (300 / currentScale / 8)];
-
-        projection.origin(o1);
-        circle.origin(o1);
-        refresh();
-    }
-
-
-    window.smallMap ? window.smallMap.mousemove() : null;
-}
-
-function mouseup() {
-    if (m0) {
-        mousemove();
-        m0 = null;
-    }
-
-    window.smallMap ? window.smallMap.mouseup() : null;
-
-    // refresh canvas
-    addCircles();
-}
-
-function refresh(duration) {
-    (duration ?
-        countryFeature.transition().duration(duration)
-        : countryFeature)
-        .attr('d', clip);
-}
 
 
 function clip(d) {
@@ -208,25 +149,12 @@ function addCircles(){
             continue;
         }
 
-        var angle = Math.atan(lat / long);
-        if(long < 0) { angle = angle + 180; }
-        var maxLength = Math.abs(1 / Math.sin(angle));
-        if(Math.abs(1 / Math.cos(angle)) < maxLength) {
-            maxLength = Math.abs(1 / Math.cos(angle));
-        }
-        maxLength *= Math.sqrt(2);
-        var k = 1 / maxLength;
-        // k = Math.sqrt(k)
-
         var x = (long * Math.cos(lat)) / Math.PI * width + centerW;
         var y = - (lat * Math.cos(long)) / Math.PI * height + centerH;
         // console.log(long, lat, x, y);
 
-        var x = long * k / Math.PI * width + centerW;
-        var y = - lat * k / Math.PI * height + centerH;
-
-        // var x = Math.sin(long) * Math.cos(lat) * width / 2 + centerW; //
-        // var y = - Math.sin(lat) * height / 2 + centerH;
+        var x = Math.sin(long) * Math.cos(lat) * width / 2 + centerW; //
+        var y = - Math.sin(lat) * height / 2 + centerH;
 
         addCircle(x, y);
     }

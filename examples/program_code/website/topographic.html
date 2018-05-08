@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+        }
+        path {
+            fill: #b0daff;
+            stroke: #FFF;
+            stroke-width: 0.1px;
+        }
+    </style>
+</head>
+
+
+<body onresize="resize()">
+
+<script src="file/d3.v3.min.js"></script>
+<script src="file/topojson.v0.min.js"></script>
+<script>
+
+var svgWidth = 1256.64;
+var svgHeight = 812.82;
+var extraX = 148.3, extraY = 328.2;
+var currentScale = 1;
+var translateX = 0, translateY = 0;
+var centerW, centerH;
+
+function resize(){
+    var width = document.body.clientWidth - 10;
+    var height = document.body.clientHeight - 10;
+
+    if(window.svg !== undefined){
+        centerW = (width - svgWidth) / 2;
+        centerH = (height - svgHeight) / 2;
+
+        var x = translateX + (centerW  + extraX) * currentScale;
+        var y = translateY + (centerH  + extraY) * currentScale;
+
+        svg.attr('width', width).attr('height', height);
+        g.attr('transform', 'translate(' +
+            x + ',' +
+            y + ')' +
+        'scale(' + currentScale + ')');
+    }
+
+    if(window.canvas !== undefined){
+        canvas.width = width;
+        canvas.height = height;
+
+        if(coordinates !== undefined)
+            addCircles();
+    }
+}
+
+var projection = d3.geo.mercator()
+    .center([0, 0])
+    .scale(200)
+    .rotate([-12, 0]);
+
+var svg = d3.select("body").append("svg");
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var g = svg.append("g");
+
+d3.json('file/world_no_antarctica.json', function (collection) {
+    countryFeature = g.selectAll('path')
+        .data(collection.features)
+        .enter()
+        .append('path')
+        .attr('d', path);
+
+    countryFeature.append("svg:title").text(function (d) {
+        return d.properties.name;
+    }).attr('text-anchor', 'middle');
+
+    // works too slow !!
+    // d3.json("file/uk_all_page_coords_clear.json", function (error, data) {
+    //     g.selectAll("circle")
+    //         .data(data.features)
+    //         .enter()
+    //         // .append("a")
+    //         // .attr("xlink:href", function (d) {
+    //         //         return "https://www.google.com/search?q=" + d.city;
+    //         //     }
+    //         // )
+    //         .append("circle")
+    //         .attr("cx", function (d) {
+    //             if(d){
+    //                 var coord = d.geometry.coordinates;
+    //                 return projection([coord[0], coord[1]])[0];
+    //             }
+    //             else return null;
+    //         })
+    //         .attr("cy", function (d) {
+    //             if(d){
+    //                 var coord = d.geometry.coordinates;
+    //                 return projection([coord[0], coord[1]])[1];
+    //             }
+    //             else return null;
+    //         })
+    //         .attr("r", 1)
+    //         .style("fill", "#F008");
+    // });
+});
+
+// zoom and pan
+var zoom = d3.behavior.zoom()
+    .on("zoom", function () {
+        translateX = d3.event.translate[0];
+        translateY = d3.event.translate[1];
+        currentScale = d3.event.scale;
+
+
+        // g.attr("transform", "translate(" +
+        //     d3.event.translate.join(",") + ")scale(" + d3.event.scale + ")");
+        // g.selectAll("circle")
+        //     .attr("d", path.projection(projection));
+        // g.selectAll("path")
+        //     .attr("d", path.projection(projection));
+
+        resize();
+    });
+svg.call(zoom);
+
+function normalize(coordinates){
+    // function transforms coordinates to be -180 to 180, -90 to 90
+    var long = coordinates[0], lat = coordinates[1];
+    var width = 180, height = 180;
+
+    if(Math.abs(long) > width * 2){
+        long = (Math.abs(long) % (width * 2)) * (long > 0 ? 1 : -1);
+    }
+    if(long < 0) long = width * 2 + long;
+    if(long > 180) long = long - 180 * 2;
+
+    if(lat > height) lat = lat % height;
+    if(lat < -height) lat = - (Math.abs(lat) % height);
+
+    return [long, lat];
+}
+
+var coordinates;
+function getCoordinates(){
+    fetch('/file/uk_all_page_coords_clear.csv')
+        .catch(function(error){ throw error; })
+        .then(function(data){ return data.text(); })
+        .then(processData);
+}
+
+function processData(data){
+    function getCoords(line) {
+                var coords;
+
+                line = line.split('\t');
+                if (line.length > 5) {
+                    coords = normalize([parseFloat(line[2]),
+                                        parseFloat(line[1])]);
+                    coords = [coords[0], coords[1], line[5], line[4]];
+                }
+                else
+                    coords = [null, null, null, null];
+
+                return coords;
+            }
+
+            data = data.split('\n');
+            data = data.slice(1, data.length);
+            data = data.map(getCoords);
+
+            coordinates = data;
+            console.log('Data received!');
+            console.log(coordinates);
+
+            addCircles();
+}
+getCoordinates();
+
+var canvas = document.body.appendChild(document.createElement('canvas'));
+canvas.setAttribute('id', 'mapCanvas');
+canvas.width = document.body.clientWidth;
+canvas.height = document.body.clientHeight;
+canvas.setAttribute('style', 'position: fixed; top: 0; left: 0; pointer-events: none; ');
+
+var context = canvas.getContext('2d');
+context.fillStyle = '#ff0000';
+
+function addCircle(x, y){
+    context.beginPath();
+    context.arc(x, y, 2, 0, 2 * Math.PI);
+    context.fill();
+}
+
+function addCircles(){
+    context.clearRect(0, 0, document.body.clientWidth, document.body.clientHeight);
+
+    var centerW = (document.body.clientWidth) / 2 * currentScale + translateX;
+    var centerH = (document.body.clientHeight) / 2 * currentScale + translateY;
+
+    for (var i = 0; i < coordinates.length; i++){
+        var coordinate = coordinates[i];
+        coordinate = projection(coordinate);
+
+        addCircle(coordinate[0] * currentScale + centerW,
+            coordinate[1] * currentScale + centerH);
+    }
+}
+
+resize();
+
+</script>
+</body>
+</html>
