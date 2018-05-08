@@ -7,7 +7,7 @@ app = Flask(__name__, template_folder='', static_url_path='/wiki')
 
 @app.route('/')
 def index():
-    return render_template('datacentres.html')
+    return render_template('datacentres2.html')
 
 
 @app.route('/file/<name>')

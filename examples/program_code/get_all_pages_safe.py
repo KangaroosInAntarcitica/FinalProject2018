@@ -60,4 +60,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_all_pages, file='uk_all_pages_safe.csv')
+    timeit(get_all_pages, language='ru')
