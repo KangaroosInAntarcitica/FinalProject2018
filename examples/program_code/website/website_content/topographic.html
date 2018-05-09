@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+        }
+        path {
+            fill: #b0daff;
+            stroke: #FFF;
+            stroke-width: 0.1px;
+        }
+
+        #controls {
+            width: 340px;
+            height: 100vh;
+            overflow-y: scroll;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+
+            background-color: #ade0ff;
+            border-right: 2px solid #5aa8ff;
+            outline: 2px solid #ade0ff;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            direction: rtl;
+
+            transition: 0.5s;
+        }
+
+        #controls .hide-button {
+            position: fixed;
+            top: 10px;
+            width: 40px;
+            height: 40px;
+            background-color: #0000;
+            border: 2px solid #5aa8ff;
+            border-radius: 4px;
+            outline: none;
+
+            color: #5aa8ff;
+            font-size: 12px;
+
+            transition: 0.5s;
+        }
+        #controls .hide-button:hover {
+            background-color: #ade0ff88;
+        }
+
+        #controls > .title {
+            width: 300px;
+            height: 60px;
+            background-color: #FFF8;
+
+            color: #ade0ff;
+            font-size: 50px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        #controls #cursorButton {
+            width: 290px;
+            height: 30px;
+            margin: 5px;
+
+            border: 0 solid #FFF;
+            border-radius: 0;
+            background-color: #FFF;
+            font-size: 24px;
+            color: #F00;
+        }
+        #controls > .container, #selectedData > .container{
+            direction: ltr;
+            width: 300px;
+            border-top: 1px solid #5aa8ff;
+            display: flex;
+            flex-direction: column;
+
+            margin-bottom: 10px;
+        }
+        #controls > .container .title, #selectedData .title {
+            text-align: center;
+            font-size: 24px;
+            color: #5aa8ff;
+            padding: 5px;
+        }
+        #controls .horizontal {
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 280px;
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: stretch;
+        }
+        #controls input[type="text"]{
+            height: 24px;
+            width: 190px;
+            background-color: #FFF;
+
+            border: 2px solid #5aa8ff;
+            border-radius: 4px;
+            outline: none;
+
+            padding-left: 5px;
+            padding-right: 5px;
+            color: #333;
+            font-size: 18px;
+        }
+        #controls button {
+            height: 30px;
+            width: 80px;
+            padding-left: 5px;
+
+            margin-left: 10px;
+            background-color: #FFF;
+
+            border: 2px solid #5aa8ff;
+            border-radius: 4px;
+            outline: none;
+
+            color: #5aa8ff;
+            font-size: 18px;
+        }
+        #controls input[type="radio"] {
+            display: block;
+            border: none;
+            background-color: #FFF;
+            margin-left: 10px;
+        }
+        #controls p {
+            display: block;
+            font-size: 18px;
+            color: #666;
+            padding: 0;
+            margin: 0;
+        }
+        #controls button:hover {
+            background-color: #FFF8;
+        }
+
+        #selectedData {
+            width: 340px;
+            height: calc(100vh - 100px);
+            position: fixed;
+            overflow-y: scroll;
+
+            top: 100px;
+            background-color: #ade0ff;
+            border-top: 1px solid #5aa8ff;
+            transition: 0.5s;
+
+            direction: rtl;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .selectedDataNumber {
+            width: 290px;
+            height: 30px;
+            margin: 5px;
+
+            background-color: #5aa8ff;
+            color: #FFF;
+            font-size: 24px;
+            text-align: center;
+            vertical-align: center;
+        }
+        .selectedDataItem {
+            width: 270px;
+            height: 30px;
+            min-height: 30px;
+            margin: 5px;
+            padding-top: 4px;
+            padding-left: 10px;
+            padding-right: 10px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+
+            background-color: #FFF;
+            color: #555;
+            font-size: 18px;
+            text-align: left;
+            vertical-align: center;
+
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+<body onresize="resize()">
+    <div id="controls" style="left: -40px;">
+        <button class="hide-button" onclick="showControls()" style="left: 312px;"> ◀ </button>
+        <!-- > ◀ ▶ ▲ ▼ -->
+        <div class="title"> WikiNG </div>
+
+        <button id="cursorButton" onclick="showCursorCanvas()"> Show Selector ⥈ </button>
+        <div id="selectedData" style="left: -340px">
+            <div class="title" style="color: #5aa8ff; width: 290px"> Selection Mode Enabled ! </div>
+            <div class="container" id="selectedDataContainer">
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="title"> Refresh: </div>
+            <div class="horizontal">
+                <input name="refreshType" type="radio" onchange="refreshType()" >
+                <p> Always </p>
+            </div>
+            <div class="horizontal">
+                <input name="refreshType" type="radio" onchange="refreshType()" checked="">
+                <p> Optimised </p>
+            </div>
+        </div>
+        <div class="container">
+            <div class="title"> File </div>
+            <div class="horizontal">
+                <input title='file' id='fileInput' type="text" placeholder="File path">
+                <button onclick="changeFile()"> Load! </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="file/d3.v3.min.js"></script>
+    <script src="file/topojson.v0.min.js"></script>
+    <script src="file/topographic.js"></script>
+
+    <script>
+        var selectionMode = false;
+
+        function showControls(){
+            var button = document.getElementsByClassName('hide-button')[0];
+            var controls = document.getElementById('controls');
+            if (controls.style.left !== '-40px'){
+                controls.style.left = '-40px';
+                button.innerText = '◀';
+                button.style.left = '312px';
+
+                if(selectionMode){
+                    document.getElementById('selectedData').style.left = '-40px';
+                }
+            } else {
+                controls.style.left = '-340px';
+                button.innerText = '▶';
+                button.style.left = '10px';
+
+                document.getElementById('selectedData').style.left = '-340px';
+            }
+        }
+
+        /* CURSOR CANVAS */
+        function showCursorCanvas(){
+            var cursorButton = document.getElementById('cursorButton');
+            if(cursorCanvas !== undefined){
+                if(cursorCanvas.style.display === 'none'){
+                    cursorButton.style.color = '#FFF';
+                    cursorButton.style.backgroundColor = '#F00';
+                    cursorButton.innerText = 'Hide Selector ⥈';
+                    cursorCanvas.style.display = 'block';
+
+                    selectionMode = true;
+                    document.getElementById('selectedData').style.left = '-40px';
+                }
+                else {
+                    cursorButton.style.color = '#F00';
+                    cursorButton.style.backgroundColor = '#FFF';
+                    cursorButton.innerText = 'Show Selector ⥈';
+                    cursorCanvas.style.display = 'none';
+
+                    selectionMode = false;
+                    document.getElementById('selectedData').style.left = '-340px';
+                }
+            }
+        }
+
+        function addSelectedData(data){
+            var container = document.getElementById('selectedDataContainer');
+            container.innerHTML = '';
+
+            var new_title = document.createElement('div');
+            new_title.classList.add('selectedDataNumber');
+            new_title.innerText = 'Selected: ' + data.length;
+            container.appendChild(new_title);
+
+            for(var i = 0; i < 100 && i < data.length; i++){
+                var page = data[i];
+                var title = page[2];
+                var newEl = document.createElement('div');
+                newEl.classList.add('selectedDataItem');
+                newEl.onclick = loadWikiPage.bind(this, title);
+                newEl.innerText = title;
+                container.appendChild(newEl);
+            }
+        }
+
+        function loadWikiPage(name){
+            location.assign('https://uk.wikipedia.org/wiki/' + name);
+        }
+
+        /* FILE INPUT */
+        var fileInput = document.getElementById('fileInput');
+        fileInput.value = settings.file.slice(6, settings.file.length);
+        function changeFile(){
+            settings.file = '/file/' + fileInput.value;
+            getCoordinates();
+            addCircles();
+        }
+
+        function refreshType(){
+            var buttons = document.getElementsByName('refreshType');
+            if(buttons[0].checked === true)
+                settings.canvasReloadAlways = true;
+            else
+                settings.canvasReloadAlways = false;
+        }
+    </script>
+
+</body>
+</html>

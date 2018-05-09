@@ -46,6 +46,9 @@ def parse_coordinates(coordinates):
                 coordinates[i].startswith('display') or \
                 coordinates[i].startswith('title') or \
                 coordinates[i].startswith('globe') or \
+                coordinates[i].startswith('source') or \
+                coordinates[i].startswith('yandex') or \
+                coordinates[i].startswith('name') or \
                 coordinates[i].startswith('scale'):
 
             del coordinates[i]

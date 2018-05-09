@@ -3,6 +3,7 @@ from os import path
 
 
 def convert(file_name, save=False, *args, **kwargs):
+    """ This function converts .csv coordinates to json svg file """
     if file_name[-4:] == 'json':
         file_name = file_name[:-4] + 'csv'
     write_file_name = file_name.replace('csv', 'json')
@@ -31,7 +32,7 @@ def convert(file_name, save=False, *args, **kwargs):
 
     data = data.split('\n')[1:]
     data = [*map(get_coords, data)][:-1]
-    data = data[:2000]
+    data = data[:]
     data = {'type': 'FeatureCollection', 'features': data}
 
     if save:

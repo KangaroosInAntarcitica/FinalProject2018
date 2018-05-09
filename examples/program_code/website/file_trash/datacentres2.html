@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <style type="text/css">
+        html, body {
+            font: 300 13px "Helvetica Neue", Helvetica;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        path {
+            fill: #b0daff;
+            stroke: #FFF;
+        }
+
+        .circle-path {
+            fill: #F002;
+            stroke: none;
+            stroke-width: 1px;
+        }
+
+        .circle-none {
+            display: none;
+        }
+
+        circle {
+            stroke-width: 0.5px;
+            vector-effect: non-scaling-stroke
+        }
+
+        circle.f {
+            stroke: #ffffff;
+            fill-opacity: 0.8
+        }
+
+        circle.m {
+            stroke: #ffffff;
+            fill-opacity: 0.8
+        }
+
+        #smallMap path {
+            fill: #5aa8ff;
+            stroke: #FFF;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 160px;
+
+            position: fixed;
+            left: calc(50% - 80px);
+            bottom: 10px;
+        }
+        #buttons {
+            height: 40px;
+            width: 200px;
+            display: flex;
+            flex-direction: row;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        #buttons > button {
+            height: 40px;
+            width: 25%;
+            margin: 1px;
+            border: none;
+            outline: none;
+            background-color: #23bc3e;
+
+            font-size: 20px;
+            color: #FFF;
+        }
+        #buttons > button:hover {
+            background-color: #229a37;
+        }
+
+        #scrollableParentSmallMap {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        #scrollableSmallMap {
+            position: absolute;
+            overflow-y: scroll;
+            width: 200px;
+            height: 160px;
+        }
+        #scrollableFillSmallMap {
+            width: 160px;
+            height: 4000px;
+        }
+
+        #smallMapContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 160px;
+            height: 160px;
+            margin: 10px;
+            border-radius: 5px;
+            /*border: 2px solid #23bc3e;*/
+        }
+        #bottomControls {
+            width: 400px;
+            height: 180px;
+            background-color: #FFF;
+            border-radius: 5px;
+            border: 2px solid #23bc3e;
+
+            display: flex;
+            flex-direction: row;
+        }
+        .bottomButtons {
+            width: 110px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+        }
+        .bottomButtons > div {
+            width: 100px;
+            border: none;
+            outline: none;
+            background-color: #23bc3e;
+            border-radius: 5px;
+            color: #FFF;
+            font-size: 16px;
+            height: 28px;
+            margin: 5px;
+            text-align: center;
+            padding-top: 7px;
+        }
+        .bottomButtons > div:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        .bottomButtons > .red {
+            background-color: #ff3620;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="chart"></div>
+
+    <canvas id="mapCanvas"></canvas>
+
+    <div id="controls">
+        <div id="buttons">
+            <!-- <button onclick=""> < </button> -->
+            <button onclick="scaleMap('-')"> - </button>
+            <button onclick="scaleMap('+')"> + </button>
+            <!-- <button onclick=""> > </button> -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="file/d3.v3.min.js"></script>
+<script type="text/javascript" src="file/d3.geo.js"></script>
+<script type="text/javascript" src="file/mainMapCanvas.js"> </script>
+</body>
+</html>

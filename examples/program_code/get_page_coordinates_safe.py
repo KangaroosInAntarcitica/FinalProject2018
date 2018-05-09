@@ -80,4 +80,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_page_coordinates, file_from='uk_all_pages_safe.csv')
+    timeit(get_page_coordinates, language='ru')
