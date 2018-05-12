@@ -4,6 +4,7 @@ sys.path.insert(0, '..\\')
 import wikiAPI
 import unittest
 
+
 class TestWikiRequest(unittest.TestCase):
     def test_attributes(self):
         request = wikiAPI.WikiRequest({})

@@ -26,13 +26,12 @@
             border-right: 2px solid #5aa8ff;
             outline: 2px solid #ade0ff;
 
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
+            /*display: flex;*/
+            /*flex-direction: column;*/
+            /*justify-content: flex-start;*/
+            /*align-items: flex-start;*/
 
             direction: rtl;
-
             transition: 0.5s;
         }
 
@@ -57,11 +56,11 @@
 
         #controls > .title {
             width: 300px;
-            height: 60px;
+            height: 80px;
             background-color: #FFF8;
 
             color: #ade0ff;
-            font-size: 50px;
+            font-size: 70px;
             display: flex;
             flex-direction: row;
             justify-content: center;
@@ -100,7 +99,7 @@
             display: flex;
             flex-direction: row;
             justify-content: stretch;
-            align-items: stretch;
+            align-items: center;
         }
         #controls input[type="text"]{
             height: 24px;
@@ -132,17 +131,58 @@
             font-size: 18px;
         }
         #controls input[type="radio"] {
-            display: block;
-            border: none;
-            background-color: #FFF;
             margin-left: 10px;
         }
-        #controls p {
+        #controls input[type="range"] {
+            -webkit-appearance: none;
+            margin: 10px;
+            width: 180px;
+            height: 4px;
+            outline: none;
+            border-radius: 4px;
+        }
+        #controls input[type=range]::-webkit-slider-runnable-track,
+        #controls input[type=range]::-moz-range-track,
+        #controls input[type=range]::-ms-track{
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            animate: 0.2s;
+            background: #FFF;
+            border-radius: 2px;
+        }
+        #controls input[type=range]::-moz-range-thumb,
+        #controls input[type=range]::-ms-thumb {
+            cursor: pointer;
+            -webkit-appearance: none;
+            background-color: #555;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+        #controls input[type=range]::-webkit-slider-thumb{
+            cursor: pointer;
+            -webkit-appearance: none;
+            background-color: #777;
+            width: 14px;
+            height: 14px;
+            border-radius: 7px;
+        }
+
+        #controls .playButton {
+            width: 30px;
+            border-radius: 15px;
+            font-size: 15px;
+            padding-left: 7px;
+        }
+        #controls p, #controls label {
             display: block;
             font-size: 18px;
             color: #666;
             padding: 0;
             margin: 0;
+            margin-top: 2px;
+            margin-bottom: 4px;
         }
         #controls button:hover {
             background-color: #FFF8;
@@ -150,20 +190,35 @@
 
         #selectedData {
             width: 340px;
-            height: calc(100vh - 100px);
+            height: calc(100vh - 120px);
             position: fixed;
             overflow-y: scroll;
 
-            top: 100px;
+            top: 120px;
             background-color: #ade0ff;
             border-top: 1px solid #5aa8ff;
             transition: 0.5s;
 
             direction: rtl;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
+            z-index: 200;
+        }
+        .selectedDataButton {
+            transition: 0.2s;
+            margin: 10px;
+            margin-bottom: 0px;
+            width: 280px;
+            height: 30px;
+
+            font-size: 20px;
+            color: #222;
+            background-color: #FFF;
+            border: 2px solid #5aa8ff;
+            outline: none;
+        }
+        .selectedDataButton:hover {
+            color: #666;
+            background-color: #FFF;
+            border: 2px solid #000;
         }
         .selectedDataNumber {
             width: 290px;
@@ -178,20 +233,16 @@
         }
         .selectedDataItem {
             width: 270px;
-            height: 30px;
-            min-height: 30px;
             margin: 5px;
             padding-top: 4px;
             padding-left: 10px;
             padding-right: 10px;
             overflow-x: hidden;
-            overflow-y: hidden;
 
-            background-color: #FFF;
             color: #555;
-            font-size: 18px;
+            font-size: 20px;
             text-align: left;
-            vertical-align: center;
+            border-bottom: 1px solid #FFF8;
 
             cursor: pointer;
         }
@@ -202,27 +253,85 @@
 <body onresize="resize()">
     <div id="controls" style="left: -40px;">
         <button class="hide-button" onclick="showControls()" style="left: 312px;"> ◀ </button>
-        <!-- > ◀ ▶ ▲ ▼ -->
+        <!-- > ◀ ▶ ▲ ▼ ❚❚ ∎ -->
         <div class="title"> WikiNG </div>
-
         <button id="cursorButton" onclick="showCursorCanvas()"> Show Selector ⥈ </button>
-        <div id="selectedData" style="left: -340px">
-            <div class="title" style="color: #5aa8ff; width: 290px"> Selection Mode Enabled ! </div>
-            <div class="container" id="selectedDataContainer">
-            </div>
-        </div>
 
+        <!-- Map Refresh -->
         <div class="container">
             <div class="title"> Refresh: </div>
             <div class="horizontal">
-                <input name="refreshType" type="radio" onchange="refreshType()" >
-                <p> Always </p>
+                <label>
+                    <input name="refreshType" type="radio" onchange="refreshType()" >
+                    Always
+                </label>
             </div>
             <div class="horizontal">
-                <input name="refreshType" type="radio" onchange="refreshType()" checked="">
-                <p> Optimised </p>
+                <label>
+                    <input name="refreshType" type="radio" onchange="refreshType()" checked="">
+                    Delayed (Better Performance)
+                </label>
+            </div>
+            <div class="horizontal" style="justify-content: space-between; margin-top: 5px; margin-right: 84px; margin-left: 36px; width: 180px">
+                <p style="width: 50px"> Delay: </p>
+                <input onchange="changeDelayTime()" style="width: 40px" id='delayTimeInput' type="text" value="0.2">
+                <p> seconds </p>
             </div>
         </div>
+
+        <!-- Map Time Controls -->
+        <div class="container">
+            <div class="title"> Time Controls </div>
+            <div class="horizontal" style="justify-content: space-between">
+                <p id="timeFrom" style="margin-left: 22px"> 2000:10:12 </p>
+                <p> - </p>
+                <p id="timeTo" style="margin-right: 20px"> 2017:10:12 </p>
+            </div>
+            <div class="horizontal" style="height: 40px">
+                <p style="width: 50px"> From: </p>
+                <input title='timeFrom' id='timeFromInput' type="range"
+                       onchange="changeTime()">
+                <button class="playButton" id="timeFromButton" onclick="playTimeClick('from')"> ▶ </button>
+            </div>
+            <div class="horizontal" style="height: 40px">
+                <p style="width: 50px"> To: </p>
+                <input title='timeFrom' id='timeToInput' type="range"
+                       onchange="changeTime()">
+                <button class="playButton" id="timeToButton" onclick="playTimeClick('to')"> ▶ </button>
+            </div>
+            <div class="horizontal" style="justify-content: space-between">
+                <p style="width: 50px"> Step: </p>
+                <input style="width: 40px" title='stepYears' id='stepYears' type="text" value="1">
+                <p> years </p> <p style="color: #000; font-size: 30px;"> / </p>
+                <input style="width: 40px" title="stepSeconds" id="stepSeconds" type="text" value="1">
+                <p> seconds </p>
+            </div>
+        </div>
+
+        <!-- Filter: Authors -->
+        <div class="container">
+            <div class="title"> Filter: revision authors </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsBots" type="checkbox" onchange="filterAuthors()" checked>
+                    Bots
+                </label>
+            </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsUsers" type="checkbox" onchange="filterAuthors()" checked>
+                    Users
+                </label>
+            </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsAnonymous" type="checkbox" onchange="filterAuthors()" checked>
+                    Anonymous
+                </label>
+            </div>
+        </div>
+
+        <!-- Load File -->
         <div class="container">
             <div class="title"> File </div>
             <div class="horizontal">
@@ -232,99 +341,30 @@
         </div>
     </div>
 
+
+    <div id="selectedData" style="left: -340px">
+        <div class="title" style="color: #5aa8ff; width: 290px"> Selection Mode Enabled ! </div>
+        <div class="container">
+            <button class="selectedDataButton" onclick="addSelection()">
+                <span style="color: #16d188"> + </span> Limit to Selection
+            </button>
+            <button class="selectedDataButton" onclick="removeSelection()">
+                <span style="color: #FF0000"> - </span> Exclude Selection
+            </button>
+            <button class="selectedDataButton" onclick="resetSelection()">
+                <span style="color: #000"> ↺ </span> RESET
+            </button>
+        </div>
+        <div class="container" id="selectedDataContainer">
+        </div>
+    </div>
+
     <script src="file/d3.v3.min.js"></script>
     <script src="file/topojson.v0.min.js"></script>
+
     <script src="file/topographic.js"></script>
-
-    <script>
-        var selectionMode = false;
-
-        function showControls(){
-            var button = document.getElementsByClassName('hide-button')[0];
-            var controls = document.getElementById('controls');
-            if (controls.style.left !== '-40px'){
-                controls.style.left = '-40px';
-                button.innerText = '◀';
-                button.style.left = '312px';
-
-                if(selectionMode){
-                    document.getElementById('selectedData').style.left = '-40px';
-                }
-            } else {
-                controls.style.left = '-340px';
-                button.innerText = '▶';
-                button.style.left = '10px';
-
-                document.getElementById('selectedData').style.left = '-340px';
-            }
-        }
-
-        /* CURSOR CANVAS */
-        function showCursorCanvas(){
-            var cursorButton = document.getElementById('cursorButton');
-            if(cursorCanvas !== undefined){
-                if(cursorCanvas.style.display === 'none'){
-                    cursorButton.style.color = '#FFF';
-                    cursorButton.style.backgroundColor = '#F00';
-                    cursorButton.innerText = 'Hide Selector ⥈';
-                    cursorCanvas.style.display = 'block';
-
-                    selectionMode = true;
-                    document.getElementById('selectedData').style.left = '-40px';
-                }
-                else {
-                    cursorButton.style.color = '#F00';
-                    cursorButton.style.backgroundColor = '#FFF';
-                    cursorButton.innerText = 'Show Selector ⥈';
-                    cursorCanvas.style.display = 'none';
-
-                    selectionMode = false;
-                    document.getElementById('selectedData').style.left = '-340px';
-                }
-            }
-        }
-
-        function addSelectedData(data){
-            var container = document.getElementById('selectedDataContainer');
-            container.innerHTML = '';
-
-            var new_title = document.createElement('div');
-            new_title.classList.add('selectedDataNumber');
-            new_title.innerText = 'Selected: ' + data.length;
-            container.appendChild(new_title);
-
-            for(var i = 0; i < 100 && i < data.length; i++){
-                var page = data[i];
-                var title = page[2];
-                var newEl = document.createElement('div');
-                newEl.classList.add('selectedDataItem');
-                newEl.onclick = loadWikiPage.bind(this, title);
-                newEl.innerText = title;
-                container.appendChild(newEl);
-            }
-        }
-
-        function loadWikiPage(name){
-            location.assign('https://uk.wikipedia.org/wiki/' + name);
-        }
-
-        /* FILE INPUT */
-        var fileInput = document.getElementById('fileInput');
-        fileInput.value = settings.file.slice(6, settings.file.length);
-        function changeFile(){
-            settings.file = '/file/' + fileInput.value;
-            getCoordinates();
-            addCircles();
-        }
-
-        function refreshType(){
-            var buttons = document.getElementsByName('refreshType');
-            if(buttons[0].checked === true)
-                settings.canvasReloadAlways = true;
-            else
-                settings.canvasReloadAlways = false;
-        }
-    </script>
+    <script src="file/topographicCanvas.js"></script>
+    <script src="file/topographicControls.js"></script>
 
 </body>
 </html>
