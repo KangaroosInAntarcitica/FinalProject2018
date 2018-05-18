@@ -10,11 +10,11 @@
             margin: 0;
             font-family: 'Montserrat', sans-serif;
 
-            background-color: #1d2933;
+            background-color: #FFF;
         }
         path {
             fill: #b0daff;
-            stroke: #1d2933;
+            stroke: #FFF;
             stroke-width: 0.1px;
         }
 
@@ -45,7 +45,7 @@
             width: 40px;
             height: 40px;
             background-color: #0000;
-            border: 2px solid #FFFa;
+            border: 2px solid #37414a;
             border-radius: 4px;
             outline: none;
 
@@ -55,7 +55,7 @@
             transition: 0.5s;
         }
         #controls .hide-button:hover {
-            background-color: #37414a11;
+            background-color: #37414a44;
             color: #FFFa;
         }
 
@@ -88,16 +88,18 @@
             /* border-bottom: 1px solid #69e0e4; */
             display: flex;
             flex-direction: column;
-
-            margin-bottom: 20px;
         }
         #controls > .container:after {
             display: block;
             direction: ltr;
             width: 240px;
-            height: 10px;
-            background-color: #69e0e4;
-            margin-right: 30px;
+            height: 0;
+            border-bottom: 1px solid #69e0e4;
+            margin-left: 30px;
+
+            margin-bottom: 10px;
+            margin-top: 10px;
+            content: '';
         }
 
         #controls > .container .title, #selectedData .title {
@@ -109,16 +111,16 @@
         }
         #controls .horizontal {
             margin-left: 30px;
-            margin-right: 10px;
-            width: 260px;
+            margin-right: 30px;
+            width: 240px;
             display: flex;
             flex-direction: row;
             justify-content: stretch;
             align-items: center;
         }
-        #controls input[type="text"]{
-            height: 24px;
-            width: 190px;
+        #controls input[type=text]{
+            height: 22px;
+            width: 160px;
             background-color: #FFF0;
 
             border: 1px solid #FFF0;
@@ -137,14 +139,14 @@
             border: 1px solid #FFF;
         }
         #controls button {
-            height: 30px;
+            height: 26px;
             width: 80px;
             padding-left: 5px;
 
             margin-left: 10px;
             background-color: #37414a;
 
-            border: 2px solid #CCC;
+            border: 1px solid #CCC;
             border-radius: 4px;
             outline: none;
 
@@ -195,44 +197,44 @@
             background-color: #69e0e4;
         }
 
-        #controls input[type="range"] {
+        #controls input[type=range] {
             -webkit-appearance: none;
             margin: 10px;
             width: 180px;
-            height: 4px;
+            height: 2px;
             outline: none;
-            border-radius: 4px;
+            border-radius: 2px;
         }
         #controls input[type=range]::-webkit-slider-runnable-track,
         #controls input[type=range]::-moz-range-track,
         #controls input[type=range]::-ms-track{
             width: 100%;
-            height: 4px;
+            height: 2px;
             cursor: pointer;
-            animate: 0.2s;
-            background: #FFF;
+            transition: 0.2s;
+            background-color: #FFF;
             border-radius: 2px;
         }
         #controls input[type=range]::-moz-range-thumb,
         #controls input[type=range]::-ms-thumb {
             cursor: pointer;
             -webkit-appearance: none;
-            background-color: #555;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
+            background-color: #69e0e4;
+            width: 14px;
+            height: 14px;
+            border-radius: 7px;
         }
         #controls input[type=range]::-webkit-slider-thumb{
             cursor: pointer;
             -webkit-appearance: none;
-            background-color: #777;
+            background-color: #69e0e4;
             width: 14px;
             height: 14px;
             border-radius: 7px;
         }
 
-        #controls .playButton {
-            width: 30px;
+        #controls button.playButton {
+            width: 26px;
             border-radius: 15px;
             font-size: 15px;
             padding-left: 7px;
@@ -331,7 +333,7 @@
                     Always
                 </label>
             </div>
-            <div class="horizontal">
+            <div class="horizontal" style="margin-right: 10px; width: 260px;">
                 <label>
                     <input name="refreshType" type="radio" onchange="refreshType()" checked="">
                     Delayed (Better Performance)
@@ -347,35 +349,38 @@
         <!-- Map Time Controls -->
         <div class="container">
             <div class="title"> Time Controls </div>
-            <div class="horizontal" style="justify-content: space-between">
-                <p id="timeFrom" style="margin-left: 22px"> 2000:10:12 </p>
+            <div class="horizontal" style="justify-content: space-between; width: 230px;">
+                <b> <p id="timeFrom" style="margin-left: 22px"> 2000:10:12 </p> </b>
                 <p> - </p>
-                <p id="timeTo" style="margin-right: 20px"> 2017:10:12 </p>
+                <b> <p id="timeTo" style="margin-right: 20px"> 2017:10:12 </p> </b>
             </div>
-            <div class="horizontal" style="height: 40px">
+            <div class="horizontal" style="height: 40px;">
                 <p style="width: 50px"> From: </p>
                 <input title='timeFrom' id='timeFromInput' type="range"
                        onchange="changeTime()">
-                <button class="playButton" id="timeFromButton" onclick="playTimeClick('from')"> ▶ </button>
+                <button style="margin-left: 0;" class="playButton" id="timeFromButton"
+                        onclick="playTimeClick('from')"> ▶ </button>
             </div>
-            <div class="horizontal" style="height: 40px">
+            <div class="horizontal" style="height: 40px;">
                 <p style="width: 50px"> To: </p>
                 <input title='timeFrom' id='timeToInput' type="range"
                        onchange="changeTime()">
-                <button class="playButton" id="timeToButton" onclick="playTimeClick('to')"> ▶ </button>
+                <button style="margin-left: 0;"class="playButton" id="timeToButton"
+                        onclick="playTimeClick('to')"> ▶ </button>
             </div>
             <div class="horizontal" style="justify-content: space-between">
-                <p style="width: 50px"> Step: </p>
+                <p> <b> Step: </b> </p>
                 <input style="width: 40px" title='stepYears' id='stepYears' type="text" value="1">
-                <p> years </p> <p style="color: #000; font-size: 30px;"> / </p>
+                <p> years </p> <p style="font-size: 22px;"> / </p>
                 <input style="width: 40px" title="stepSeconds" id="stepSeconds" type="text" value="1">
-                <p> seconds </p>
+                <p> s </p>
             </div>
         </div>
 
         <!-- Filter: Authors -->
         <div class="container">
-            <div class="title"> Filter: revision authors </div>
+            <div class="title"> Filter </div>
+            <div class="horizontal"> <p> <b> Revision Authors: </b></p></div>
             <div class="horizontal">
                 <label>
                     <input id="filterAuthorsBots" type="checkbox" onchange="filterAuthors()" checked>
@@ -400,7 +405,7 @@
         <div class="container">
             <div class="title" id="displayNumber"> Loading </div>
             <div class="horizontal">
-                <label> <input type="checkbox" id="limitDisplayCheckbox" onchange="limitDisplay()"> Limit Display: </label>
+                <label> <input type="checkbox" id="limitDisplayCheckbox" onchange="limitDisplay()"> Limit: </label>
                 <input style="margin-left: 20px; width: 80px" id='limitDisplayInput' type="text" value="1000" onchange="limitDisplay()">
             </div>
             <div class="horizontal">

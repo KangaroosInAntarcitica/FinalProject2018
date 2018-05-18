@@ -198,7 +198,7 @@ function showCursorCanvas(){
         else {
             cursorButton.style.color = '#37414a';
             cursorButton.style.backgroundColor = '#FFF';
-            cursorButton.innerHTML = 'Show Selector ⥈ ';
+            cursorButton.innerHTML = 'Show Selector <span style="color: #F00"> ⥈ </span> ';
             cursorCanvas.style.display = 'none';
 
             selectionMode = false;
