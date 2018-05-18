@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600" rel="stylesheet">
+    <style>
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+
+            background-color: #1d2933;
+        }
+        path {
+            fill: #b0daff;
+            stroke: #1d2933;
+            stroke-width: 0.1px;
+        }
+
+        #controls {
+            width: 340px;
+            height: 100vh;
+            overflow-y: scroll;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+
+            background-color: #37414a;
+            border-right: 2px solid #69e0e4;
+            outline: 2px solid #37414a;
+
+            /*display: flex;*/
+            /*flex-direction: column;*/
+            /*justify-content: flex-start;*/
+            /*align-items: flex-start;*/
+
+            direction: rtl;
+            transition: 0.5s;
+        }
+
+        #controls .hide-button {
+            position: fixed;
+            top: 18px;
+            width: 40px;
+            height: 40px;
+            background-color: #0000;
+            border: 2px solid #FFFa;
+            border-radius: 4px;
+            outline: none;
+
+            color: #69e0e4;
+            font-size: 24px;
+
+            transition: 0.5s;
+        }
+        #controls .hide-button:hover {
+            background-color: #37414a11;
+            color: #FFFa;
+        }
+
+        #controls > .title {
+            width: 300px;
+            height: 80px;
+            background-color: #FFF8;
+
+            color: #37414a;
+            font-size: 70px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        #controls #cursorButton {
+            width: 290px;
+            height: 30px;
+            margin: 5px;
+
+            border: 0 solid #FFF;
+            border-radius: 4px;
+            background-color: #FFF;
+            font-size: 24px;
+            color: #37414a;
+        }
+        #controls > .container, #selectedData > .container{
+            direction: ltr;
+            width: 300px;
+            /* border-bottom: 1px solid #69e0e4; */
+            display: flex;
+            flex-direction: column;
+
+            margin-bottom: 20px;
+        }
+        #controls > .container:after {
+            display: block;
+            direction: ltr;
+            width: 240px;
+            height: 10px;
+            background-color: #69e0e4;
+            margin-right: 30px;
+        }
+
+        #controls > .container .title, #selectedData .title {
+            font-size: 26px;
+            font-weight: 300;
+            color: #69e0e4;
+            padding: 5px;
+            margin-left: 25px;
+        }
+        #controls .horizontal {
+            margin-left: 30px;
+            margin-right: 10px;
+            width: 260px;
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: center;
+        }
+        #controls input[type="text"]{
+            height: 24px;
+            width: 190px;
+            background-color: #FFF0;
+
+            border: 1px solid #FFF0;
+            border-radius: 4px;
+            outline: none;
+
+            padding-left: 5px;
+            padding-right: 5px;
+            color: #FFF;
+            font-size: 16px;
+            font-weight: 300;
+
+            transition: 0.2s;
+        }
+        #controls input[type=text]:focus {
+            border: 1px solid #FFF;
+        }
+        #controls button {
+            height: 30px;
+            width: 80px;
+            padding-left: 5px;
+
+            margin-left: 10px;
+            background-color: #37414a;
+
+            border: 2px solid #CCC;
+            border-radius: 4px;
+            outline: none;
+
+            color: #CCC;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+        #controls button:hover {
+            background-color: #CCC;
+            color: #37414a;
+        }
+
+        #controls input[type=radio] {
+            margin-left: 20px;
+            -webkit-appearance: none;
+            outline: none;
+        }
+        #controls input[type=radio]::before {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border: 2px solid #FFFB;
+            background-color: #FFFB;
+            border-radius: 8px;
+            content: '';
+        }
+        #controls input[type=radio]:checked::before {
+            background-color: #69e0e4;
+        }
+
+        #controls input[type=checkbox] {
+            margin-left: 20px;
+            -webkit-appearance: none;
+            outline: none;
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+        #controls input[type=checkbox]::before {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border: 2px solid #FFFB;
+            background-color: #FFFB;
+            border-radius: 2px;
+            content: '';
+        }
+        #controls input[type=checkbox]:checked::before {
+            background-color: #69e0e4;
+        }
+
+        #controls input[type="range"] {
+            -webkit-appearance: none;
+            margin: 10px;
+            width: 180px;
+            height: 4px;
+            outline: none;
+            border-radius: 4px;
+        }
+        #controls input[type=range]::-webkit-slider-runnable-track,
+        #controls input[type=range]::-moz-range-track,
+        #controls input[type=range]::-ms-track{
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            animate: 0.2s;
+            background: #FFF;
+            border-radius: 2px;
+        }
+        #controls input[type=range]::-moz-range-thumb,
+        #controls input[type=range]::-ms-thumb {
+            cursor: pointer;
+            -webkit-appearance: none;
+            background-color: #555;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+        #controls input[type=range]::-webkit-slider-thumb{
+            cursor: pointer;
+            -webkit-appearance: none;
+            background-color: #777;
+            width: 14px;
+            height: 14px;
+            border-radius: 7px;
+        }
+
+        #controls .playButton {
+            width: 30px;
+            border-radius: 15px;
+            font-size: 15px;
+            padding-left: 7px;
+        }
+        #controls p, #controls label {
+            display: block;
+            font-size: 14px;
+            color: #FFF6;
+            padding: 0;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+        #controls b {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 16px;
+            color: #bec6d1;
+        }
+        #selectedData {
+            width: 340px;
+            height: calc(100vh - 120px);
+            position: fixed;
+            overflow-y: scroll;
+
+            top: 120px;
+            background-color: #ade0ff;
+            border-top: 1px solid #5aa8ff;
+            transition: 0.5s;
+
+            direction: rtl;
+            z-index: 200;
+        }
+        .selectedDataButton {
+            transition: 0.2s;
+            margin: 10px;
+            margin-bottom: 0px;
+            width: 280px;
+            height: 30px;
+
+            font-size: 20px;
+            color: #222;
+            background-color: #FFF;
+            border: 2px solid #5aa8ff;
+            outline: none;
+        }
+        .selectedDataButton:hover {
+            color: #666;
+            background-color: #FFF;
+            border: 2px solid #000;
+        }
+        .selectedDataNumber {
+            width: 290px;
+            height: 30px;
+            margin: 5px;
+
+            background-color: #5aa8ff;
+            color: #FFF;
+            font-size: 24px;
+            text-align: center;
+            vertical-align: center;
+        }
+        .selectedDataItem {
+            width: 270px;
+            margin: 5px;
+            padding-top: 4px;
+            padding-left: 10px;
+            padding-right: 10px;
+            overflow-x: hidden;
+
+            color: #555;
+            font-size: 20px;
+            text-align: left;
+            border-bottom: 1px solid #FFF8;
+
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+<body onresize="resize()">
+    <div id="controls" style="left: -40px;">
+        <button class="hide-button" onclick="showControls()" style="left: 312px;"> ◀ </button>
+        <!-- > ◀ ▶ ▲ ▼ ❚❚ ∎ -->
+        <div class="title"> WikiNG </div>
+        <button id="cursorButton" onclick="showCursorCanvas()"> Show Selector <span style="color: #F00"> ⥈ </span> </button>
+
+        <!-- Map Refresh -->
+        <div class="container">
+            <div class="title"> Map Display </div>
+            <div class="horizontal"> <p><b> Refresh: </b></p> </div>
+            <div class="horizontal">
+                <label>
+                    <input name="refreshType" type="radio" onchange="refreshType()" >
+                    Always
+                </label>
+            </div>
+            <div class="horizontal">
+                <label>
+                    <input name="refreshType" type="radio" onchange="refreshType()" checked="">
+                    Delayed (Better Performance)
+                </label>
+            </div>
+            <div class="horizontal" style="justify-content: space-between; margin-top: 5px; margin-right: 84px; width: 200px">
+                <p style="width: 60px"> <b> Delay: </b> </p>
+                <input onchange="changeDelayTime()" style="width: 40px" id='delayTimeInput' type="text" value="0.2">
+                <p> seconds </p>
+            </div>
+        </div>
+
+        <!-- Map Time Controls -->
+        <div class="container">
+            <div class="title"> Time Controls </div>
+            <div class="horizontal" style="justify-content: space-between">
+                <p id="timeFrom" style="margin-left: 22px"> 2000:10:12 </p>
+                <p> - </p>
+                <p id="timeTo" style="margin-right: 20px"> 2017:10:12 </p>
+            </div>
+            <div class="horizontal" style="height: 40px">
+                <p style="width: 50px"> From: </p>
+                <input title='timeFrom' id='timeFromInput' type="range"
+                       onchange="changeTime()">
+                <button class="playButton" id="timeFromButton" onclick="playTimeClick('from')"> ▶ </button>
+            </div>
+            <div class="horizontal" style="height: 40px">
+                <p style="width: 50px"> To: </p>
+                <input title='timeFrom' id='timeToInput' type="range"
+                       onchange="changeTime()">
+                <button class="playButton" id="timeToButton" onclick="playTimeClick('to')"> ▶ </button>
+            </div>
+            <div class="horizontal" style="justify-content: space-between">
+                <p style="width: 50px"> Step: </p>
+                <input style="width: 40px" title='stepYears' id='stepYears' type="text" value="1">
+                <p> years </p> <p style="color: #000; font-size: 30px;"> / </p>
+                <input style="width: 40px" title="stepSeconds" id="stepSeconds" type="text" value="1">
+                <p> seconds </p>
+            </div>
+        </div>
+
+        <!-- Filter: Authors -->
+        <div class="container">
+            <div class="title"> Filter: revision authors </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsBots" type="checkbox" onchange="filterAuthors()" checked>
+                    Bots
+                </label>
+            </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsUsers" type="checkbox" onchange="filterAuthors()" checked>
+                    Users
+                </label>
+            </div>
+            <div class="horizontal">
+                <label>
+                    <input id="filterAuthorsAnonymous" type="checkbox" onchange="filterAuthors()" checked>
+                    Anonymous
+                </label>
+            </div>
+        </div>
+
+        <!-- Limit Display -->
+        <div class="container">
+            <div class="title" id="displayNumber"> Loading </div>
+            <div class="horizontal">
+                <label> <input type="checkbox" id="limitDisplayCheckbox" onchange="limitDisplay()"> Limit Display: </label>
+                <input style="margin-left: 20px; width: 80px" id='limitDisplayInput' type="text" value="1000" onchange="limitDisplay()">
+            </div>
+            <div class="horizontal">
+                <p style="margin-top: 4px; margin-left: 6px;" id="displayNumberLimited"> Displaying coordinates </p> </div>
+        </div>
+
+        <!-- Load File -->
+        <div class="container">
+            <div class="title"> File </div>
+            <div class="horizontal">
+                <input title='file' id='fileInput' type="text" placeholder="File path">
+                <button onclick="changeFile()"> Load! </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="selectedData" style="left: -340px">
+        <div class="title" style="color: #5aa8ff; width: 290px"> Selection Mode Enabled ! </div>
+        <div class="container">
+            <button class="selectedDataButton" onclick="addSelection()">
+                <span style="color: #16d188"> + </span> Limit to Selection
+            </button>
+            <button class="selectedDataButton" onclick="removeSelection()">
+                <span style="color: #FF0000"> - </span> Exclude Selection
+            </button>
+            <button class="selectedDataButton" onclick="resetSelection()">
+                <span style="color: #000"> ↺ </span> RESET
+            </button>
+        </div>
+        <div class="container" id="selectedDataContainer">
+        </div>
+    </div>
+
+    <script src="file/d3.v3.min.js"></script>
+    <script src="file/topojson.v0.min.js"></script>
+
+    <script src="file/topographic.js"></script>
+    <script src="file/topographicCanvas.js"></script>
+    <script src="file/topographicControls_improved_design.js"></script>
+
+</body>
+</html>

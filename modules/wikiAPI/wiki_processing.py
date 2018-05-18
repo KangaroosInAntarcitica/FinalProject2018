@@ -1,5 +1,6 @@
 import datetime
 
+
 def get_coordinates(data_item):
     """
     Function gets all coordinates from data - page content
@@ -13,7 +14,7 @@ def get_coordinates(data_item):
     if content:
         for i in range(len(content) - 4):
             if content[i] == '{' and content[i + 1] == '{':
-                data = content[i+2:i+100].split('}')[0]
+                data = content[i + 2:i + 100].split('}')[0]
                 data = data.replace(' ', '').lower()
 
                 if 'missing' not in data and 'unknown' not in data:
@@ -35,21 +36,16 @@ def parse_coordinates(coordinates):
         return None, None
 
     coordinates = coordinates.split('|')
+    print(coordinates)
 
     i = 0
     while i < len(coordinates):
         coordinates[i] = coordinates[i].strip()
+        # 'dim', 'region', 'type', 'display', 'title', 'globe', 'source',
+        # 'yandex', 'name', 'sacle', 'nogoogle', 'nozm'
         if coordinates[i] in ['', 'dec', 'dms', 'dm'] or \
-                coordinates[i].startswith('dim') or \
-                coordinates[i].startswith('region') or \
-                coordinates[i].startswith('type') or \
-                coordinates[i].startswith('display') or \
-                coordinates[i].startswith('title') or \
-                coordinates[i].startswith('globe') or \
-                coordinates[i].startswith('source') or \
-                coordinates[i].startswith('yandex') or \
-                coordinates[i].startswith('name') or \
-                coordinates[i].startswith('scale'):
+                coordinates[i][0] not in '-0123456789' and not \
+                (len(coordinates[i]) == 1 and coordinates[i][0] in 'nsew'):
 
             del coordinates[i]
         else:
@@ -79,7 +75,7 @@ def parse_coordinates(coordinates):
         lat = abs(int(coordinates[0])) + \
               (abs(int(coordinates[1])) + abs(float(coordinates[2])) / 60) / 60
         long = abs(int(coordinates[4])) + \
-              (abs(int(coordinates[5])) + abs(float(coordinates[6])) / 60) / 60
+               (abs(int(coordinates[5])) + abs(float(coordinates[6])) / 60) / 60
         lat = lat * (-1 if coordinates[3] == 's' else 1)
         long = long * (-1 if coordinates[7] == 'w' else 1)
 
@@ -103,5 +99,5 @@ def to_date(data_item):
     """
     Function gets date from the data
     """
-    return datetime.datetime.strptime\
+    return datetime.datetime.strptime \
         (data_item['timestamp'], "%Y-%m-%dT%H:%M:%SZ")

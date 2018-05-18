@@ -17,7 +17,9 @@ var settings = {
     timeToTimeout: null,
 
     selectLimitation: false,
-    currentSelectedData: {}
+    currentSelectedData: {},
+
+    limitDisplay: null
 };
 
 function resize(){

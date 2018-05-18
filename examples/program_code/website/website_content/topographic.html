@@ -331,6 +331,17 @@
             </div>
         </div>
 
+        <!-- Limit Display -->
+        <div class="container">
+            <div class="title" id="displayNumber"> Loading </div>
+            <div class="horizontal">
+                <label> <input type="checkbox" id="limitDisplayCheckbox" onchange="limitDisplay()"> Limit Display: </label>
+                <input style="margin-left: 20px; width: 80px" id='limitDisplayInput' type="text" value="1000" onchange="limitDisplay()">
+            </div>
+            <div class="horizontal">
+                <p style="margin-top: 4px; margin-left: 6px;" id="displayNumberLimited"> Displaying coordinates </p> </div>
+        </div>
+
         <!-- Load File -->
         <div class="container">
             <div class="title"> File </div>

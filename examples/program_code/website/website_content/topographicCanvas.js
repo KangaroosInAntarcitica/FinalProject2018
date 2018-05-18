@@ -111,6 +111,9 @@ function addCircles(){
     var lat_i = mapContent.header['lat'];
     var long_i = mapContent.header['long'];
     for (var i = 0; i < mapContent.data.length; i++){
+        // hadles limit display functionality
+        if(settings.limitDisplay && i >= settings.limitDisplay) break;
+
         var currentItem = mapContent.data[i];
         var coordinate = [currentItem[long_i], currentItem[lat_i]];
         coordinate = projection(coordinate);
@@ -118,6 +121,8 @@ function addCircles(){
         addCircle(coordinate[0] * map.scale + centerW + map.translate.x,
             coordinate[1] * map.scale + centerH + map.translate.y);
     }
+
+    changeLimitDisplay();
 }
 
 /* CURSOR CANVAS */

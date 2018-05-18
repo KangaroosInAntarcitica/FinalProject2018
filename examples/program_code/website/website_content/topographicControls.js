@@ -21,6 +21,37 @@ function showControls(){
     }
 }
 
+/* CHANGE NUMBER */
+function limitDisplay(){
+    var input = parseInt(document.getElementById('limitDisplayInput').value);
+    var checkbox = document.getElementById('limitDisplayCheckbox').checked;
+
+    if(checkbox && input){
+        settings.limitDisplay = input;
+    } else {
+        settings.limitDisplay = null;
+    }
+
+    addCircles();
+}
+
+function changeLimitDisplay(){
+    var displayNumber = document.getElementById('displayNumber');
+    var displayNumberLimited = document.getElementById('displayNumberLimited');
+    var input = parseInt(document.getElementById('limitDisplayInput').value);
+    var checkbox = document.getElementById('limitDisplayCheckbox').checked;
+
+    console.log('here', displayNumber);
+    var all = mapContent.data.length;
+    var limited = all;
+    if(checkbox && input && input < all){
+        limited = input;
+    }
+
+    displayNumber.innerText = 'Found: ' + all;
+    displayNumberLimited.innerText = 'Displaying ' + limited + ' coordinates!'
+}
+
 /* TIME CONTROLS */
 function changeTime(){
     // function selects only current data according to the input

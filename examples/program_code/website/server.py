@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder='', static_url_path='/wiki')
 
 @app.route('/')
 def index():
-    return get_data('topographic.html')
+    return get_data('topographic_improved_design.html')
 
 
 @app.route('/file/<name>')
