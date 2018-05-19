@@ -12,7 +12,6 @@ var languages = {
     'en': 'English',
     'ru': 'Russian'
 };
-// supported titles: pageid, title,
 
 function normalize(coordinates){
     // function transforms coordinates to be -180 to 180, -90 to 90
@@ -33,10 +32,32 @@ function normalize(coordinates){
 
 /* FETCHING FUNCTIONS */
 function getCoordinates(){
+    var loadingStatus = document.getElementById('loadingStatus');
+    loadingStatus.innerText = 'Loading...';
+
+    // if(settings.fetchDataLoading){
+    //     loadingStatus.innerText = 'Another file is loading...';
+    //     return null;
+    // }
+
+    var errorLoading = false;
+    var file = settings.file.slice(6, settings.file.length);
+    settings.fetchDataLoading = true;
+
     fetch(settings.file)
-        .catch(function(error){ throw error; })
+        .then(function(response){ if(!response.ok) errorLoading = true; return response; })
+        .catch(function(error){ errorLoading = true; })
         .then(function(data){ return data.text(); })
-        .then(processData);
+        .then(function(data){
+            if(errorLoading){
+                loadingStatus.innerText = 'Error occurred!'
+            } else {
+                loadingStatus.innerText = 'File ' + file + ' loaded!';
+                processData(data);
+            }
+
+            settings.fetchDataLoading = false;
+        });
 }
 
 function processLine(data){
@@ -49,6 +70,9 @@ function processLine(data){
         coordinates = normalize(coordinates);
         data[mapContent.header['long']] = coordinates[0];
         data[mapContent.header['lat']] = coordinates[1];
+
+        // skip data without coordinates
+        if (!(coordinates[0] && coordinates[1])) return null;
     }
     if('timestamp' in mapContent.header) {
         var time = data[mapContent.header['timestamp']];
@@ -61,6 +85,7 @@ function processLine(data){
 
 function processData(data){
     data = data.split('\n');
+
     var header = data[0].split('\t');
     mapContent.header = {};
 
@@ -68,17 +93,16 @@ function processData(data){
     for(var i = 0; i < header.length; i++){
         mapContent.header[header[i]] = i;
     }
+    mapContent.header.color = header.length;
 
     data = data.slice(1, data.length);
-    data = data.map(processLine);
+    data = data.map(processLine).filter(function(x){ return !!x; });
 
     mapContent.allData = data;
-    mapContent.data = mapContent.allData;
     mapContent.selectedData = mapContent.allData;
-    mapContent.filteredData = mapContent.allData;
 
-    addCircles();
-    setTime();
+    setUpColors();
+    filterAuthors();
 }
 
 
@@ -94,27 +118,37 @@ var context = canvas.getContext('2d');
 
 function addCircle(x, y){
     context.beginPath();
-    context.arc(x, y, 1, 0, 2 * Math.PI);
+    context.arc(x, y, settings.radius, 0, 2 * Math.PI);
     context.fill();
 }
 
 function addCircles(){
-    if(!mapContent.data) return null;
-    if(!mapContent.header['lat'] || !mapContent.header['long']) return null;
+    var loadingStatus = document.getElementById('loadingStatus');
 
+    if(!mapContent.data) return null;
+    if(!mapContent.header['lat'] || !mapContent.header['long']) {
+        loadingStatus.innerText = 'Error: No coordinates!';
+        return null;
+    }
+
+    var opacity = opacityToHex(settings.opacity) || 'FF';
     context.clearRect(0, 0, document.body.clientWidth, document.body.clientHeight);
-    context.fillStyle = '#f008';
+    context.fillStyle = settings.colors[0] + opacity;
 
     var centerW = ((document.body.clientWidth) / 2 - 481.3) * map.scale;
     var centerH = ((document.body.clientHeight) / 2 - 80.1) * map.scale;
 
     var lat_i = mapContent.header['lat'];
     var long_i = mapContent.header['long'];
+    var color_i = settings.colorType !== 'single' && mapContent.header.color;
     for (var i = 0; i < mapContent.data.length; i++){
         // hadles limit display functionality
         if(settings.limitDisplay && i >= settings.limitDisplay) break;
-
         var currentItem = mapContent.data[i];
+
+        // change the color
+        if(color_i){ context.fillStyle = currentItem[color_i] + opacity; }
+
         var coordinate = [currentItem[long_i], currentItem[lat_i]];
         coordinate = projection(coordinate);
 
@@ -132,8 +166,10 @@ cursorCanvas.setAttribute('id', 'cursorCanvas');
 
 cursorCanvas.clear = function(){
     cursorCanvas.context.clearRect(0, 0, document.body.clientWidth, document.body.clientHeight);
-    cursorCanvas.context.fillStyle = '#0091cc33';
-    cursorCanvas.context.strokeStyle = '#00C9FF';
+    // cursorCanvas.context.fillStyle = '#0091cc33';
+    // cursorCanvas.context.strokeStyle = '#00C9FF';
+    cursorCanvas.context.fillStyle = '#37414a33';
+    cursorCanvas.context.strokeStyle = '#37414a';
 };
 
 cursorCanvas.style.display = 'none';
@@ -221,5 +257,4 @@ cursorCanvas.onmouseup = function(event){
     cursorCanvas.coordinates.mousedown = false;
 };
 
-getCoordinates();
 resize();

@@ -3,13 +3,17 @@ import time
 path.append('..\\..\\modules')
 import wikiAPI
 
+""" OUTDATED - use get_all_pages_sage in the modules instead """
+
 FILE = '%s_all_pages.csv'
 LANG = 'uk'
 
+
 def get_all_pages(file=None, language=LANG):
-    assert isinstance(language, str) and len(language) == 2, \
-        'Language should be a 2 char code: en, uk, etc.'
-    assert isinstance(file, (str, None)), 'File should be file path string.'
+    if not isinstance(language, str) and len(language) == 2:
+        raise ValueError('Language should be a 2 char code: en, uk, etc.')
+    if not (file is None or isinstance(file, str)):
+        raise ValueError('File should be file path string.')
     file = file if file else FILE % language
 
     params = {

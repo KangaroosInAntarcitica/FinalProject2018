@@ -16,10 +16,17 @@ var settings = {
     timeFromTimeout: null,
     timeToTimeout: null,
 
+    radius: 1, // marker circle radius
+    opacity: 1, // opacity
+
     selectLimitation: false,
     currentSelectedData: {},
 
-    limitDisplay: null
+    limitDisplay: null,
+    fetchDataLoading: false,
+
+    colors: [],
+    colorType: 'single' // single, authors, time
 };
 
 function resize(){

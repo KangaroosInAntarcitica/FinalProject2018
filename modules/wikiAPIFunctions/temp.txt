@@ -1,0 +1,1 @@
+{'list': 'allpages', 'aplimit': 'max', 'apfilterredir': 'nonredirects', 'apcontinue': ''} {'count': 0, 'params': {'apfilterredir': 'nonredirects', 'list': 'allpages', 'aplimit': 'max', 'format': 'json', 'apcontinue': '', 'action': 'query', 'formatversion': '1'}}

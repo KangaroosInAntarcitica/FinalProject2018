@@ -1,6 +1,6 @@
 from sys import path
 import time
-path.append('..\\..\\modules')
+path.append('..\\')
 import pandas
 import wikiAPI
 
@@ -16,16 +16,16 @@ STATE_FILE = 'temp.txt'
 
 def get_langlinks(link_language, file_from=None, file_to=None,
                   language=LANG, state_file=STATE_FILE):
-    assert isinstance(link_language, str) and len(link_language) == 2, \
-        'Language should be a 2 char code: en, uk, etc.'
-    assert isinstance(language, str) and len(language) == 2, \
-        'Language should be a 2 char code: en, uk, etc.'
-    assert file_from is None or isinstance(file_from, str), \
-        'File should be file path string.'
-    assert file_to is None or isinstance(file_to, str), \
-        'File should be file path string'
-    assert isinstance(state_file, str), \
-        'State File should be file path string.'
+    if not (isinstance(link_language, str) and len(link_language) == 2):
+        raise ValueError('Language should be a 2 char code: en, uk, etc.')
+    if not (isinstance(language, str) and len(language) == 2):
+        raise ValueError('Language should be a 2 char code: en, uk, etc.')
+    if not (file_from is None or isinstance(file_from, str)):
+        raise ValueError('File should be file path string.')
+    if not (file_to is None or isinstance(file_to, str)):
+        raise ValueError('File should be file path string')
+    if not isinstance(state_file, str):
+        raise ValueError('State File should be file path string.')
     file_from = file_from if file_from else FILE_FROM % language
     file_to = file_to if file_to else FILE_TO % (language, link_language)
 
@@ -60,7 +60,6 @@ def get_langlinks(link_language, file_from=None, file_to=None,
     request.send_all()
 
     response.save()
-    print(response.show())
 
 
 def timeit(func, *args, **kwargs):

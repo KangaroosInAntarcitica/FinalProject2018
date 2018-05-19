@@ -1,6 +1,6 @@
 from sys import path
 import time
-path.append('..\\..\\modules')
+path.append('..\\')
 import wikiAPI
 
 """
@@ -13,12 +13,12 @@ STATE_FILE = 'temp.txt'
 
 
 def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
-    assert isinstance(language, str) and len(language) == 2, \
-        'Language should be a 2 char code: en, uk, etc.'
-    assert file is None or isinstance(file, str), \
-        'File should be file path string.'
-    assert isinstance(state_file, str), \
-        'State File should be file path string.'
+    if not (isinstance(language, str) and len(language) == 2):
+        raise ValueError('Language should be a 2 char code: en, uk, etc.')
+    if not(file is None or isinstance(file, str)):
+        raise ValueError('File should be file path string.')
+    if not isinstance(state_file, str):
+        raise ValueError('State File should be file path string.')
     file = file if file else FILE % language
 
     params = {

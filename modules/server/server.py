@@ -3,6 +3,9 @@ from os import path
 from convert import convert
 import json
 
+
+FILES_ROUTE = '..\\wikiAPIFiles\\'
+
 app = Flask(__name__, template_folder='', static_url_path='/wiki')
 
 
@@ -18,8 +21,7 @@ def get_data(name):
     Directories searched: parent, website_content
     """
     current = path.relpath('.\\website_content\\%s' % name)
-    parent = path.relpath('..\\%s' % name)
-    print(current)
+    parent = path.relpath('%s%s' % (FILES_ROUTE, name))
 
     if path.isfile(current):
         return open(current, 'r', encoding='utf-8').read()
@@ -30,5 +32,6 @@ def get_data(name):
         return convert(current)
     elif path.isfile(parent.replace('json', 'csv')):
         return convert(parent)
+
 
 app.run(debug=1, port=5000)

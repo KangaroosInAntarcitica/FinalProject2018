@@ -7,7 +7,7 @@ function showControls(){
     if (controls.style.left !== '-40px'){
         controls.style.left = '-40px';
         button.innerText = '◀';
-        button.style.left = '312px';
+        button.style.left = '284px';
 
         if(selectionMode){
             document.getElementById('selectedData').style.left = '-40px';
@@ -15,11 +15,42 @@ function showControls(){
     } else {
         controls.style.left = '-340px';
         button.innerText = '▶';
-        button.style.left = '10px';
+        button.style.left = '-16px';
 
         document.getElementById('selectedData').style.left = '-340px';
     }
 }
+
+/* DISABLE A CONTROL */
+
+function enableControls(id, enable){
+    // function to disable controls if needed (like when a file is loaded, that
+    // lacking some information (timestamp, userid, ...)
+    var current_e = document.getElementById(id);
+
+    if(enable){
+        current_e.getElementsByClassName('title')[0]
+            .classList.remove('disabledTitle');
+
+        for(var i = 0; i < current_e.children.length; i++){
+            var child = current_e.children[i];
+            if(child.classList.contains('disabled'))
+                current_e.removeChild(child);
+        }
+    } else {
+        current_e.getElementsByClassName('title')[0]
+            .classList.add('disabledTitle');
+
+        var height = (current_e.clientHeight - 60) + 'px';
+
+        var new_e = document.createElement('div');
+        new_e.classList.add('disabled');
+        new_e.style.height = height;
+        new_e.innerText = 'Disabled';
+        current_e.appendChild(new_e);
+    }
+}
+
 
 /* CHANGE NUMBER */
 function limitDisplay(){
@@ -41,7 +72,6 @@ function changeLimitDisplay(){
     var input = parseInt(document.getElementById('limitDisplayInput').value);
     var checkbox = document.getElementById('limitDisplayCheckbox').checked;
 
-    console.log('here', displayNumber);
     var all = mapContent.data.length;
     var limited = all;
     if(checkbox && input && input < all){
@@ -62,10 +92,12 @@ function changeTime(){
     var timeFrom = parseInt(timeFromInput.value),
         timeTo = parseInt(timeToInput.value);
     var time_i = mapContent.header['timestamp'];
+    var color_i = settings.colorType === 'time' && mapContent.header.color;
 
     if(!time_i){
         timeFromText.innerText = 'INOP';
         timeToText.innerText = 'INOP';
+        addCircles();
         return null;
     }
 
@@ -82,6 +114,9 @@ function changeTime(){
         var time = item[time_i];
         if(timeFrom <= time && time <= timeTo){
             mapContent.data.push(item);
+
+            item[color_i] = colorRange(settings.colors[0], settings.colors[1],
+                (time - timeFrom) / (timeTo - timeFrom)) // percentage
         }
     }
 
@@ -95,7 +130,12 @@ function setTime(){
     var timeFromInput = document.getElementById('timeFromInput'),
         timeToInput = document.getElementById('timeToInput');
 
-    if(time_i === undefined){ changeTime(); return null; }
+    if(time_i === undefined){
+        mapContent.data = mapContent.filteredData;
+        changeTime();
+        enableControls('mapTimeControls', false);
+        return null;
+    } else { enableControls('mapTimeControls', true); }
 
     var time_max, time_min;
     for(var i = 0; i < mapContent.filteredData.length; i++){
@@ -148,7 +188,6 @@ function playTime(timeType){
     if(currentValue < maxValue){
         if(currentValue + stepYears >= maxValue) currentValue = maxValue;
         else currentValue += stepYears;
-        console.log(currentValue + '\n' + maxValue + '\n' + stepYears);
 
         if(timeType === 'from') settings.timeFromTimeout =
             window.setTimeout(playTime.bind(this, timeType), stepSeconds);
@@ -170,7 +209,8 @@ function playTime(timeType){
 }
 
 function startTime(timeType, start){
-    console.log(timeType);
+    // function merely changes time play display
+
     var timeFromButton = document.getElementById('timeFromButton');
     var timeToButton = document.getElementById('timeToButton');
     if(timeType === 'from'){
@@ -216,6 +256,7 @@ function addSelectedData(data){
     var new_title = document.createElement('div');
     new_title.classList.add('selectedDataNumber');
     new_title.innerText = 'Selected: ' + data.length;
+    new_title.style.marginBottom = '16px';
     container.appendChild(new_title);
 
     for(var i = 0; i < 100 && i < data.length; i++){
@@ -254,6 +295,7 @@ function resetSelection(){
 }
 
 /* FILTERING AUTHORS */
+
 function filterAuthors(){
     var filterBots = document.getElementById('filterAuthorsBots').checked;
     var filterUsers = document.getElementById('filterAuthorsUsers').checked;
@@ -263,27 +305,33 @@ function filterAuthors(){
     var user_i = mapContent.header['user'];
     var anon_i = mapContent.header['anon'];
     var userhidden_i = mapContent.header['userhidden'];
+    var color_i = (settings.colorType === 'authors') && mapContent.header.color;
 
-    if(!(userhidden_i && anon_i && user_i)){
+    if(!(userhidden_i !== undefined && anon_i !== undefined && user_i !== undefined)){
         mapContent.filteredData = mapContent.selectedData;
+        enableControls('mapFilterControls', false);
         setTime();
         return null;
-    }
+    } else { enableControls('mapFilterControls', true); }
 
     var result = [];
     for(var i = 0; i < mapContent.selectedData.length; i++){
         var current = mapContent.selectedData[i];
 
+        /* colors are also changed accordingly */
         if(!current[user_i]) {}
         else if(current[user_i].toLowerCase().includes('bot')){
             if(filterBots) result.push(current);
+            if(color_i) current[color_i] = settings.colors[0];
         }
         else if(current[user_i].split('.')
                 .every(function(x){ return parseInt(x) })){
             if(filterAnonymous) result.push(current);
+            if(color_i) current[color_i] = settings.colors[2];
         }
         else if(current[user_i]){
             if(filterUsers) result.push(current);
+            if(color_i) current[color_i] = settings.colors[1];
         }
     }
 
@@ -297,13 +345,15 @@ fileInput.value = settings.file.slice(6, settings.file.length);
 function changeFile(){
     settings.file = '/file/' + fileInput.value;
     getCoordinates();
-    addCircles();
 }
+
+// this will set to current file
+changeFile();
 
 /* REFRESH SETTINGS */
 function refreshType(){
     var buttons = document.getElementsByName('refreshType');
-    if(buttons[0].checked === true)
+    if(buttons[0].checked)
         settings.canvasReloadAlways = true;
     else
         settings.canvasReloadAlways = false;
@@ -318,4 +368,128 @@ function changeDelayTime(){
     } else {
         delayTimeInput.value = settings.canvasReloadDelay / 1000;
     }
+}
+
+/* COLOR CONTROLS */
+
+function displayInput(index, display, text){
+    var colorOutputs = document.getElementsByClassName('colorInputDisplay');
+    if(display){
+        colorOutputs[index].parentElement.style.display = 'flex';
+        colorOutputs[index].parentElement.getElementsByTagName('p')[0].innerText = text;
+    } else {
+        colorOutputs[index].parentElement.style.display = 'none';
+    }
+}
+
+function setUpColors(){
+    var colorType = document.getElementsByName('colorType');
+    var colorInputs = document.getElementsByClassName('colorInput');
+    var colorOutputs = document.getElementsByClassName('colorInputDisplay');
+
+    var header = mapContent.header;
+    var timestamp_i = header.timestamp,
+        user_i = header.user,
+        anon_i = header.anon,
+        userhidden_i = header.userhidden;
+
+    if(timestamp_i === undefined){
+        colorType[1].parentElement.style.display = 'none';
+        if(colorType[1].checked) colorType[0].checked = true;
+    } else {
+        colorType[1].parentElement.style.display = 'flex';
+    }
+
+    if(user_i === undefined){
+        colorType[2].parentElement.style.display = 'none';
+        if(colorType[2].checked) colorType[0].checked = true;
+    } else {
+        colorType[2].parentElement.style.display = 'flex';
+    }
+
+    if(colorType[0].checked){
+        settings.colorType = 'single';
+        displayInput(0, true, 'Primary color:');
+        displayInput(1, false); displayInput(2, false);
+    }
+    if(colorType[1].checked){
+        settings.colorType = 'authors';
+        displayInput(0, true, 'Bots color:');
+        displayInput(1, true, 'Users color:');
+        displayInput(2, true, 'Anonym. color:');
+    }
+    if(colorType[2].checked){
+        settings.colorType = 'time';
+        displayInput(0, true, 'From color:');
+        displayInput(1, true, 'To color:');
+        displayInput(2, false);
+    }
+
+    settings.colors = [colorInputs[0].value, colorInputs[1].value, colorInputs[2].value];
+    for(var i = 0; i < colorOutputs.length; i++){
+        colorOutputs[i].style.backgroundColor = settings.colors[i];
+    }
+
+    filterAuthors();
+}
+
+function colorRange(startColor, endColor, percentage){
+    // function calculates a color that is between the 2 colors
+    function toNumbers(color){
+        return [color.slice(1, 3), color.slice(3, 5), color.slice(5, 7)]
+        .map(function(x){ return Number('0x' + x)});
+    }
+    function toColor(color){
+        function hex(num){
+            num = num.toString(16);
+            if(num.length === 1) num = '0' + num;
+            return num;
+        }
+        return '#' + hex(color[0]) + hex(color[1]) + hex(color[2]);
+    }
+    function range(start, end, percentage){
+        return Math.round(start + (end - start) * percentage);
+    }
+
+    startColor = toNumbers(startColor);
+    endColor = toNumbers(endColor);
+    var result = [];
+    for(var i = 0; i < 3; i++){
+        result[i] = range(startColor[i], endColor[i], percentage)
+    }
+    result = toColor(result);
+
+    return result;
+}
+
+/* MARKER SETTINGS */
+
+function changeMarkerRadius(){
+    var radiusInput = document.getElementById('markerRadius');
+    var radius = parseFloat(radiusInput.value);
+
+    if(!radius){
+        radiusInput.value = settings.radius;
+    } else {
+        settings.radius = radius;
+    }
+
+    addCircles();
+}
+
+function changeMarkerOpacity() {
+    var opacityInput = document.getElementById('markerOpacity');
+    var opacity = parseFloat(opacityInput.value);
+
+    if(opacity && opacity > 0 && opacity < 1){
+        settings.opacity = opacity;
+    } else {
+        opacityInput.value = settings.opacity;
+    }
+}
+
+function opacityToHex(opacity){
+    opacity = Math.round(opacity * 255).toString(16);
+    if(opacity.length === 1) opacity = '0' + opacity;
+    return opacity;
 }
