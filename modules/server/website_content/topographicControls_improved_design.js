@@ -472,9 +472,9 @@ function changeMarkerRadius(){
         radiusInput.value = settings.radius;
     } else {
         settings.radius = radius;
+        addCircles();
     }
 
-    addCircles();
 }
 
 function changeMarkerOpacity() {
@@ -483,6 +483,7 @@ function changeMarkerOpacity() {
 
     if(opacity && opacity > 0 && opacity < 1){
         settings.opacity = opacity;
+        addCircles();
     } else {
         opacityInput.value = settings.opacity;
     }
