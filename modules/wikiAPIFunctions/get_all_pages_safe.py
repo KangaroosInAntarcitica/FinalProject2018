@@ -2,6 +2,7 @@ from sys import path
 import time
 path.append('..\\')
 import wikiAPI
+from change_path import *
 
 """
 This code can be used to get all pages for a specific language
@@ -20,6 +21,8 @@ def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
     if not isinstance(state_file, str):
         raise ValueError('State File should be file path string.')
     file = file if file else FILE % language
+
+    to_files()
 
     params = {
         'list': 'allpages',
@@ -48,6 +51,8 @@ def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
 
     response.save()
     print(response.show())
+
+    to_functions()
 
 
 def timeit(func, *args, **kwargs):

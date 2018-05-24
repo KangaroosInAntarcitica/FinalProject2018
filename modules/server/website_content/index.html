@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600" rel="stylesheet">
+    <title> WikiNG </title>
+    <!--
+    Colors:
+    Black: #37414a
+    Blue: #69e0e4
+    Grey: #CCC
+    -->
+    <style>
+        body {
+            width: 100%;
+            margin: 0;
+            background-color: #37414a;
+            font-family: 'Montserrat', sans-serif;
+            height: 100%;
+
+            margin-bottom: 20px;
+        }
+
+        .content {
+            width: 1000px;
+            margin-left: calc(50% - 500px);
+            transition: 0.2s;
+        }
+        header {
+            width: 1000px;
+            height: 150px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFF8;
+            color: #37414a;
+            font-size: 80px;
+
+            border-bottom: 3px solid #37414a;
+        }
+
+        .title {
+            width: 960px;
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 40px;
+            color: #69e0e4;
+            font-weight: 300;
+
+            margin-top: 16px;
+            margin-bottom: 10px;
+        }
+        #fileContainer {
+            width: 974px;
+            border-left: 3px solid #69e0e4;
+            border-right: 3px solid #69e0e4;
+
+            padding-left: 10px;
+            padding-right: 10px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .file {
+            border: 1px solid #FFF8;
+            background-color: #FFF1;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 400;
+            padding: 4px;
+
+            margin: 2px;
+            margin-left: 2px;
+            cursor: pointer;
+
+            border-radius: 4px;
+        }
+        .file:hover {
+            background-color: #FFF2;
+        }
+        .file.selected {
+            background-color: #FFF;
+            color: #37414a;
+        }
+        .addFile {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #FFF8;
+            background-color: #FFF1;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 800;
+
+            margin: 2px;
+            margin-left: 10px;
+            cursor: pointer;
+
+            border-radius: 4px;
+            outline: none;
+        }
+        .addFile:hover {
+            background-color: #FFF;
+            color: #37414a;
+        }
+
+        .emptyFile {
+            border: 1px dotted #FFF4;
+            background-color: #FFF0;
+            color: #FFF4;
+            font-size: 20px;
+            font-weight: 400;
+            padding: 4px;
+
+            margin: 2px;
+            margin-left: 10px;
+            cursor: inherit;
+
+            border-radius: 4px;
+        }
+
+        #fileDescription {
+            position: fixed;
+            width: 280px;
+            padding: 10px;
+
+            background-color: #FFF;
+            color: #FFF;
+
+            transition: opactiy 0.2s;
+            opacity: 0;
+
+            border-radius: 4px;
+        }
+        #fileDescription .name {
+            width: 100%;
+            margin: 2px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+
+            font-size: 26px;
+            color: #37414a;
+            font-weight: 400;
+
+            overflow-x: hidden;
+        }
+        #fileDescription .horizontal {
+            width: 100%;
+            margin: 2px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .descriptionItem {
+            color: #37414a;
+            font-size: 18px;
+        }
+        .descriptionItem:nth-of-type(1n) {
+            width: 180px;
+            margin-left: 10px;
+        }
+        .descriptionItem:nth-of-type(2n) {
+            margin-right: 10px;
+            font-weight: 800;
+        }
+
+        #fileDescription button.map {
+            width: 260px;
+            margin: 10px;
+            height: 30px;
+            border-radius: 4px;
+
+            font-weight: 400;
+            font-size: 20px;
+
+            background-color: #69e0e4;
+            color: #FFF;
+            border: none;
+            outline: none;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+        #fileDescription button.map:hover {
+            opacity: 0.6;
+        }
+
+        #processContainer {
+            width: 974px;
+            border-left: 3px solid #69e0e4;
+            border-right: 3px solid #69e0e4;
+
+            padding-left: 10px;
+            padding-right: 10px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        #processContainer > .title {
+            width: 100%;
+            padding: 5px;
+            margin: 0;
+            margin-left: 10px;
+            color: #FFF;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        #selectedFileContainer {
+            width: 960px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .controls {
+            width: 960px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+        .controls p, .controls label {
+            display: block;
+            font-size: 18px;
+            color: #FFF6;
+            padding: 0;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+        .controls .horizontal, .horizontal {
+            width: 960px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .controls input[type=text]{
+            height: 26px;
+            width: 400px;
+            background-color: #FFF0;
+
+            border: 1px solid #FFF0;
+            border-radius: 4px;
+            outline: none;
+
+            padding-left: 5px;
+            padding-right: 5px;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 300;
+
+            transition: 0.2s;
+
+            margin-left: 10px;
+        }
+        .controls input[type=text]:focus {
+            border: 1px solid #FFF;
+        }
+
+        .controls input[type=radio] {
+            margin-left: 20px;
+            -webkit-appearance: none;
+            outline: none;
+        }
+        .controls input[type=radio]::before {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border: 2px solid #FFF;
+            background-color: #FFF8;
+            border-radius: 8px;
+            content: '';
+        }
+        .controls input[type=radio]:checked::before {
+            background-color: #69e0e4;
+        }
+
+        .controlsButton {
+            width: 140px;
+            height: 30px;
+            border-radius: 4px;
+
+            font-weight: 400;
+            font-size: 20px;
+
+            background-color: #69e0e4;
+            color: #FFF;
+            border: none;
+            outline: none;
+
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+        .controlsButton:hover {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            WikiNG
+            <div style="font-size: 20px; color: #37414a88;"> Wiki National Geography </div>
+        </header>
+        <div class="title">
+            All Found Files
+        </div>
+        <div id="fileContainer">
+        </div>
+
+        <div class="title">
+            Process Files
+        </div>
+        <div id="processContainer">
+            <div class="title"> Selected Files for processing </div>
+            <div id="selectedFileContainer"></div>
+
+            <div class="title"> Change existing file </div>
+            <div class="controls">
+                <div class="horizontal">
+                    <label style="margin-bottom: 0"> File: <input type=text id="changeFromInput" disabled value="file"> </label>
+                </div>
+                <button style="width: 200px;"
+                    class="controlsButton" id="clearCoordinates" onclick="clearCoordinatesRequest()"> Clear coordinates </button>
+            </div>
+
+            <div class="title"> Merge files </div>
+            <div class="controls">
+                <button style="width: 200px;"
+                    class="controlsButton" id="mergeFiles" onclick="mergeFilesRequest()"> Merge all files </button>
+            </div>
+
+            <div class="title"> Get new Data </div>
+            <div id="controls" class="controls">
+                <div class="horizontal">
+                    <label> Language: <input type=text id="languageInput" style="width: 50px" value="uk" onchange="processControls()"> </label>
+                </div>
+                <div class="horizontal">
+                    <p> Action: </p>
+                    <div id="actionInputs">
+                        <label><input name="actionInput" type="radio" checked onchange="changeAction()"> Get page titles and ids </label>
+                        <label><input name="actionInput" type="radio" onchange="changeAction()"> Get coordinates </label>
+                        <label><input name="actionInput" type="radio" onchange="changeAction()"> Get revision authors & timestamps </label>
+                    </div>
+                </div>
+                <div class="horizontal" id="fileFromDiv">
+                    <label style="margin-bottom: 0"> File from: <input type=text id="fromInput" disabled value="file"> </label>
+                </div>
+                <div class="horizontal" id="fileToDiv">
+                    <label style="margin-top: 0"> File to: <input type=text id="toInput" disabled value="file"> </label>
+                </div>
+                <div class="horizontal"> <button id="submit" class="controlsButton" onclick="getDataRequest()"> Submit </button> </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="fileDescription" onclick="event.stopPropagation(); ">
+        <div class="name"> File name </div>
+        <div class="horizontal">
+            <div class="descriptionItem"> Pages: </div> <div class="descriptionItem"> true </div>
+        </div>
+        <div class="horizontal">
+            <div class="descriptionItem"> Coordinates: </div> <div class="descriptionItem"> true </div>
+        </div>
+        <div class="horizontal">
+            <div class="descriptionItem"> Authors: </div> <div class="descriptionItem"> true </div>
+        </div>
+        <div class="horizontal">
+            <div class="descriptionItem"> Timestamps: </div> <div class="descriptionItem"> true </div>
+        </div>
+        <button class="map"> Open on map! </button>
+    </div>
+
+    <script src="file/index.js"></script>
+
+</body>
+</html>

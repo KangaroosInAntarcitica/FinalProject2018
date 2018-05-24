@@ -3,6 +3,8 @@ import time
 path.append('..\\')
 import pandas
 import wikiAPI
+from change_path import *
+
 
 """
 This code can be used to get all pages for a specific language
@@ -27,6 +29,8 @@ def get_page_coordinates(file_from=None, file_to=None,
         raise ValueError('State File should be file path string.')
     file_from = file_from if file_from else FILE_FROM % language
     file_to = file_to if file_to else FILE_TO % language
+
+    to_files()
 
     dataframe = pandas.read_csv(file_from, sep='\t')
     dataframe = dataframe.astype({'pageid': 'int64'})
@@ -68,6 +72,8 @@ def get_page_coordinates(file_from=None, file_to=None,
 
     response.save()
     print(response.show())
+
+    to_functions()
 
 
 def timeit(func, *args, **kwargs):

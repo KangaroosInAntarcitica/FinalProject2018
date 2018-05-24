@@ -3,6 +3,7 @@ import time
 path.append('..\\')
 import pandas
 import wikiAPI
+from change_path import *
 
 """
 This code can be used to get all pages for a specific language
@@ -29,6 +30,8 @@ def get_revisions(file_from=None, file_to=None,
     if not direction in ('older', 'newer', None):
         raise ValueError('Wrong direction %s - can be older or newer'
                          % direction)
+
+    to_files()
 
     direction = direction if direction else DIRECTION
     file_from = file_from if file_from else FILE_FROM % language
@@ -76,6 +79,8 @@ def get_revisions(file_from=None, file_to=None,
 
     response.save()
     print(response.show())
+
+    to_functions()
 
 
 def timeit(func, *args, **kwargs):

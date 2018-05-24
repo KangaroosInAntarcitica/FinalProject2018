@@ -29,6 +29,15 @@ var settings = {
     colorType: 'single' // single, authors, time
 };
 
+
+// Initilise file name from path
+( function() {
+    var file_name = location.pathname.split('/');
+    file_name = file_name[file_name.length - 1]
+    settings.file = '/file/' + file_name;
+})();
+
+
 function resize(){
     var width = document.body.clientWidth - 2;
     var height = document.body.clientHeight - 4;

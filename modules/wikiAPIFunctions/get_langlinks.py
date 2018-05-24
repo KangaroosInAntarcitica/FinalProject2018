@@ -3,6 +3,7 @@ import time
 path.append('..\\')
 import pandas
 import wikiAPI
+from change_path import *
 
 """
 This code can be used to get all pages for a specific language
@@ -28,6 +29,8 @@ def get_langlinks(link_language, file_from=None, file_to=None,
         raise ValueError('State File should be file path string.')
     file_from = file_from if file_from else FILE_FROM % language
     file_to = file_to if file_to else FILE_TO % (language, link_language)
+
+    to_files()
 
     dataframe = pandas.read_csv(file_from, sep='\t')
     dataframe = dataframe.astype({'pageid': 'int64'})
@@ -61,6 +64,8 @@ def get_langlinks(link_language, file_from=None, file_to=None,
 
     response.save()
 
+    to_functions()
+
 
 def timeit(func, *args, **kwargs):
     start = time.time()
@@ -72,4 +77,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_langlinks, 'ru')
+    timeit(get_langlinks)
