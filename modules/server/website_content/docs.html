@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600" rel="stylesheet">
+    <title> WikiNG Docs </title>
+
+    <style>
+        body {
+            width: 100%;
+            margin: 0;
+            background-color: #37414a;
+            font-family: 'Montserrat', sans-serif;
+            height: 100%;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 20px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 800px;
+            min-width: 600px;
+            padding-left: 10px;
+            padding-right: 10px;
+            transition: 0.2s;
+            position: relative;
+        }
+        header {
+            width: 100%;
+            height: 150px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #FFF8;
+            color: #37414a;
+            font-size: 80px;
+
+            border-bottom: 3px solid #37414a;
+        }
+
+        .fileDescription {
+            position: fixed;
+            width: 280px;
+            padding: 10px;
+
+            background-color: #FFF;
+            color: #FFF;
+
+            transition: opactiy 0.2s;
+            opacity: 0;
+
+            border-radius: 4px;
+        }
+        .fileDescription .name {
+            width: 100%;
+            margin: 2px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+
+            font-size: 26px;
+            color: #37414a;
+            font-weight: 400;
+
+            overflow-x: hidden;
+        }
+        .fileDescription .horizontal {
+            width: 100%;
+            margin: 2px;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        .descriptionItem {
+            color: #37414a;
+            font-size: 18px;
+        }
+        .descriptionItem:nth-of-type(1n) {
+            width: 180px;
+            margin-left: 10px;
+        }
+        .descriptionItem:nth-of-type(2n) {
+            margin-right: 10px;
+            font-weight: 800;
+        }
+
+        .fileDescription > button {
+            width: 260px;
+            margin: 10px;
+            height: 30px;
+            border-radius: 4px;
+
+            font-weight: 400;
+            font-size: 20px;
+
+            background-color: #69e0e4;
+            color: #FFF;
+            border: none;
+            outline: none;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+        .fileDescription > button:hover {
+            opacity: 0.6;
+        }
+
+        .fileContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .file {
+            border: 1px solid #FFF8;
+            background-color: #FFF1;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 400;
+            padding: 4px;
+
+            margin: 2px;
+            margin-left: 2px;
+            cursor: pointer;
+
+            border-radius: 4px;
+        }
+        .file:hover {
+            background-color: #FFF2;
+        }
+        .file.selected {
+            background-color: #FFF;
+            color: #37414a;
+        }
+        .addFile {
+            width: 34px;
+            height: 34px;
+            border: 1px solid #FFF8;
+            background-color: #FFF1;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 800;
+
+            margin: 2px;
+            margin-left: 10px;
+            cursor: pointer;
+
+            border-radius: 4px;
+            outline: none;
+        }
+        .addFile:hover {
+            background-color: #FFF;
+            color: #37414a;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            WikiNG Docs
+            <div style="font-size: 20px; color: #37414a88;"> Wiki National Geography Documentation Page </div>
+        </header>
+
+        <p style="color: white; font-size: 20px; margin-left: 10px"> This file is not finished yet </p>
+    </div>
+    
+    <script src="file/docs.js"></script>
+</body>
+</html>

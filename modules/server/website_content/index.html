@@ -18,16 +18,25 @@
             font-family: 'Montserrat', sans-serif;
             height: 100%;
 
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
             margin-bottom: 20px;
         }
 
         .content {
-            width: 1000px;
-            margin-left: calc(50% - 500px);
+            width: 100%;
+            max-width: 800px;
+            min-width: 600px;
+            padding-left: 10px;
+            padding-right: 10px;
             transition: 0.2s;
+            position: relative;
         }
         header {
-            width: 1000px;
+            width: 100%;
             height: 150px;
 
             display: flex;
@@ -42,7 +51,7 @@
         }
 
         .title {
-            width: 960px;
+            width: calc(100% - 40px);
             padding-left: 20px;
             padding-right: 20px;
             font-size: 40px;
@@ -53,7 +62,7 @@
             margin-bottom: 10px;
         }
         #fileContainer {
-            width: 974px;
+            width: calc(100% - 26px);
             border-left: 3px solid #69e0e4;
             border-right: 3px solid #69e0e4;
 
@@ -198,7 +207,7 @@
         }
 
         #processContainer {
-            width: 974px;
+            width: calc(100% - 26px);
             border-left: 3px solid #69e0e4;
             border-right: 3px solid #69e0e4;
 
@@ -211,7 +220,6 @@
             align-items: flex-start;
         }
         #processContainer > .title {
-            width: 100%;
             padding: 5px;
             margin: 0;
             margin-left: 10px;
@@ -220,7 +228,6 @@
             font-size: 20px;
         }
         #selectedFileContainer {
-            width: 960px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -228,7 +235,8 @@
         }
 
         .controls {
-            width: 960px;
+            width: calc(100% - 40px);
+            max-width: 800px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -247,7 +255,6 @@
             margin-bottom: 4px;
         }
         .controls .horizontal, .horizontal {
-            width: 960px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;

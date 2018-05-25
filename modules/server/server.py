@@ -8,13 +8,19 @@ from file_check import get_all_files
 
 
 FILES_ROUTE = '..\\wikiAPIFiles\\'
+TEMPLATE_FOLDER = 'website_content\\'
 
-app = Flask(__name__, template_folder='', static_url_path='/wiki')
+app = Flask(__name__, template_folder=TEMPLATE_FOLDER, static_url_path='/wiki')
 
 
 @app.route('/')
 def index():
-    return get_data('index.html')
+    return render_template('index.html')
+
+
+@app.route('/docs')
+def get_docs():
+    return get_data('docs.html')
 
 
 @app.route('/file/<name>')
@@ -57,7 +63,7 @@ def call_function(command):
     os.chdir('..\\wikiAPIFunctions')
 
     command = 'python exec_function.py ' + command
-    subprocess.call('start /wait %s' % command, shell=True)
+    subprocess.call('start %s' % command, shell=True)
     # os.system("gnome-terminal -e 'bash -c \" %s; sleep 1000000\" '" % command)
     os.chdir('..\\server')
 

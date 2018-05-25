@@ -1,5 +1,10 @@
 # Wikipedia National Geography
 
+###### Video description to project can be found [here](https://goo.gl/XCMhFA)
+###### To start the project on windows just run the run.bat file
+
+<br>
+
   This project is intended to display information about the [Wikipedia](https://www.wikipedia.org) pages of 
 certain language on **map**. The functionality includes displaying the geocode of 
 the *pages*, location of revision *authors* and other information.  
