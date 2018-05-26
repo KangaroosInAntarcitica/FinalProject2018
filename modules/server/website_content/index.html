@@ -49,6 +49,40 @@
 
             border-bottom: 3px solid #37414a;
         }
+        header > div {
+            font-size: 20px;
+            color: #37414a88;
+        }
+        .menu{
+            width: calc(100% - 4px);
+            height: 40px;
+            border: 2px solid #FFF8;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .menu > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            padding-left: 15px;
+            padding-right: 15px;
+
+            background-color: #FFF0;
+            color: #FFF;
+            font-size: 24px;
+            font-weight: 300;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu > div:hover {
+            background-color: #FFF8;
+            color: #37414a;
+        }
 
         .title {
             width: calc(100% - 40px);
@@ -61,6 +95,7 @@
             margin-top: 16px;
             margin-bottom: 10px;
         }
+
         #fileContainer {
             width: calc(100% - 26px);
             border-left: 3px solid #69e0e4;
@@ -331,8 +366,14 @@
     <div class="content">
         <header>
             WikiNG
-            <div style="font-size: 20px; color: #37414a88;"> Wiki National Geography </div>
+            <div> Wiki National Geography </div>
         </header>
+        <div class="menu">
+            <div onclick="location.assign('/')">Main</div>
+            <div onclick="location.assign('/map/')">Map</div>
+            <div onclick="location.assign('/docs')">Docs</div>
+        </div>
+
         <div class="title">
             All Found Files
         </div>

@@ -44,19 +44,62 @@
 
             border-bottom: 3px solid #37414a;
         }
+        header > div {
+            font-size: 20px;
+            color: #37414a88;
+        }
+        .menu{
+            width: calc(100% - 4px);
+            height: 40px;
+            border: 2px solid #FFF8;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+        .menu > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            padding-left: 15px;
+            padding-right: 15px;
+
+            background-color: #FFF0;
+            color: #FFF;
+            font-size: 24px;
+            font-weight: 300;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu > div:hover {
+            background-color: #FFF8;
+            color: #37414a;
+        }
+
+        .title {
+            width: calc(100% - 40px);
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 40px;
+            color: #69e0e4;
+            font-weight: 300;
+
+            margin-top: 16px;
+            margin-bottom: 10px;
+        }
 
         .fileDescription {
-            position: fixed;
             width: 280px;
             padding: 10px;
 
             background-color: #FFF;
             color: #FFF;
+            border-radius: 4px;
 
             transition: opactiy 0.2s;
-            opacity: 0;
-
-            border-radius: 4px;
         }
         .fileDescription .name {
             width: 100%;
@@ -92,7 +135,6 @@
             margin-right: 10px;
             font-weight: 800;
         }
-
         .fileDescription > button {
             width: 260px;
             margin: 10px;
@@ -161,18 +203,384 @@
             background-color: #FFF;
             color: #37414a;
         }
+        .emptyFile {
+            border: 1px dotted #FFF4;
+            background-color: #FFF0;
+            color: #FFF4;
+            font-size: 20px;
+            font-weight: 400;
+            padding: 4px;
+
+            margin: 2px;
+            margin-left: 10px;
+            cursor: inherit;
+
+            border-radius: 4px;
+        }
+
+        .container {
+            width: calc(100% - 36px);
+            border-left: 3px solid #69e0e4;
+            border-right: 3px solid #69e0e4;
+
+            padding-left: 20px;
+            padding-right: 10px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            font-size: 16px;
+            font-weight: 400;
+            color: #FFFA;
+        }
+        .container .title {
+            padding: 5px;
+            margin: 0;
+            margin-left: 10px;
+            color: #FFF;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        .container .title.important {
+            margin-left: 0;
+            padding-left: 0;
+            font-weight: 800;
+            font-size: 26px;
+            color: #aefcff;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .container p {
+            padding-bottom: 6px;
+            padding-top: 6px;
+            margin: 0;
+        }
+        .container b {
+            font-weight: 600;
+            color: #FFF;
+        }
+
+        .container .example {
+            padding: 10px;
+            border: 2px dotted #FFF4;
+
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-left: 50px;
+
+            border-radius: 4px;
+        }
+        .container .example::before {
+            content: 'Example';
+            font-size: 10px;
+            color: #FFF4;
+            display: block;
+        }
+        .container .note{
+            padding: 10px;
+            border: 2px solid #ff756f;
+
+            margin-left: 50px;
+
+            border-radius: 4px;
+        }
+        .container .note::before {
+            content: '!! NOTE !!';
+            font-size: 10px;
+            color: #ff756f;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+        .controls p, .controls label {
+            display: block;
+            font-size: 18px;
+            color: #FFF6;
+            padding: 0;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+        .controls .horizontal, .horizontal {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .controls input[type=text]{
+            height: 26px;
+            background-color: #FFF0;
+
+            border: 1px solid #FFF0;
+            border-radius: 4px;
+            outline: none;
+
+            padding-left: 5px;
+            padding-right: 5px;
+            color: #FFF;
+            font-size: 20px;
+            font-weight: 300;
+
+            transition: 0.2s;
+
+            margin-left: 10px;
+        }
+        .controls input[type=text]:focus {
+            border: 1px solid #FFF;
+        }
+
+        .controls input[type=radio] {
+            margin-left: 20px;
+            -webkit-appearance: none;
+            outline: none;
+        }
+        .controls input[type=radio]::before {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border: 2px solid #FFF;
+            background-color: #FFF8;
+            border-radius: 8px;
+            content: '';
+        }
+        .controls input[type=radio]:checked::before {
+            background-color: #69e0e4;
+        }
+
+        .controls button {
+            width: 140px;
+            height: 30px;
+            border-radius: 4px;
+
+            font-weight: 400;
+            font-size: 20px;
+
+            background-color: #69e0e4;
+            color: #FFF;
+            border: none;
+            outline: none;
+
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+        .controls button:hover {
+            opacity: 0.5;
+        }
+
     </style>
 </head>
 <body>
     <div class="content">
         <header>
             WikiNG Docs
-            <div style="font-size: 20px; color: #37414a88;"> Wiki National Geography Documentation Page </div>
+            <div> Wiki National Geography Documentation Page </div>
         </header>
+        <div class="menu">
+            <div onclick="location.assign('/')">Main</div>
+            <div onclick="location.assign('/map/')">Map</div>
+            <div onclick="location.assign('/docs')">Docs</div>
+        </div>
 
-        <p style="color: white; font-size: 20px; margin-left: 10px"> This file is not finished yet </p>
+        <div class="title"> File description </div>
+        <div class="container">
+            <p> All files user has in their storage are shown in the appropriate box,
+                which could be easily recongnised by its title. </p>
+            <p> For example, a file, with a name 'my_file.csv' would look like this.</p>
+            <div class="example"></div>
+
+
+            <p> If you <b>click</b> on the file, you will get all the information about it.</p>
+            <p> This current file, as you can see yourself, has <b>pages</b> info (which are
+            always the first thing, that is parsed and also <b> coordinates </b>. The
+            coordiantes are required for the file to be displayed on map </p>
+            <p> To open it on map - you just press the <b>'Open on map'</b> button.</p>
+            <div class="example"></div>
+            <p> The other 2 parameters are <b>authors</b> - which correspond to information about
+            revision authors and <b>timestamp</b>, which is the time a page was created. </p>
+            <br>
+            <p> Now you can try displaying description with the file from the first example. </p>
+            <p> Note, that if you open the map, an error will be displayed, notifing that this file
+            does not exist. </p>
+
+            <p> Finally, files also have buttons near them, which allows you to either add them or
+            remove from the list of selected for processing files.</p>
+            <div style="display: flex; flex-direction: row">
+                <div class="example" style="margin-left: 20px"></div>
+                <div class="example" style="margin-left: 20px"></div>
+            </div>
+            <p> You can try adding and removing from the second box in the example above. </p>
+            <p> The second box corresponds to <b> Selected for processing files </b> in controls. </p>
+        </div>
+
+        <div class="title"> Creating new files with data </div>
+        <div class="container">
+            <p> Before displaying anything on the map - you need to collect the data.
+                This is how it all works - at first you need to get <b>ids</b> of all the required
+                pages. This is done with a 'allpages' request to Wikipedia. Then - once you
+                have a way to identify page, you can all the other required information about it.
+                So then the requests for the <b>content, user or timestamp</b> are sent for each <b>pageid</b>
+                gathered before.</p>
+            <p> WikiNG has made the parsing process easy - all you have to do is press a button. </p>
+            <div class="note"> <p>Calling python terminal browser works on <b> Windows </b> using the default terminal well,
+                but may not work properly on Linux and MacOS. </p> <p> If for some reason it does not work, you can
+                call the required functions directly through <b>Python</b> - it is just as easy.</p> </div>
+
+            <div class="title important"> Getting all the pages </div>
+            <p> The controls you will get will look something like this: </p>
+            <div class="example">
+                <div class="title"> Get new Data </div>
+                <form class="controls">
+                    <div class="horizontal">
+                        <label> Language: <input id="languageInput" type=text value="uk"> </label>
+                    </div>
+                    <div class="horizontal">
+                        <p> Action: </p>
+                        <div id="actionInputs">
+                            <label><input name="actionInput" type="radio" checked> Get page titles and ids </label>
+                            <label><input name="actionInput" type="radio"> Get coordinates </label>
+                            <label><input name="actionInput" type="radio"> Get revision authors & timestamps </label>
+                        </div>
+                    </div>
+                    <div class="horizontal" id="fileFromDiv">
+                        <label style="margin-bottom: 0"> File from: <input type=text disabled value="None"> </label>
+                    </div>
+                    <div class="horizontal" id="fileToDiv">
+                        <label style="margin-top: 0"> File to: <input type=text id="toInput" disabled value="uk_pages.csv"> </label>
+                    </div>
+                    <div class="horizontal"> <button> Submit </button> </div>
+                </form>
+            </div>
+            <p> The first thing you need to choose is the <b>language</b> - this is a string of 2 letters,
+                that represents a language in Wikipedia. If you do not know the code for a language you need,
+                just open Wikipedia in the corresponding language and look at the link.
+                For example: https://<b>uk</b>.wikipedia.org - has the language code in it: uk (Ukrainian).</p>
+            <p> In the radio buttons list, we choose <b> Get page titles and ids</b>, cos that is exactly what we need.</p>
+            <p> The <b>File from</b> should be None and the <b>File to</b> will correspond to the file, it
+                all will be saved to. </p>
+            <p> All that you need to do now is press submit! <br>... And wait till the data is collected.</p>
+
+            <div class="title important"> Getting coordinates </div>
+            <p> Now, that you have collected the pages, we need to get somthing to display on the map -
+                the coordinates.</p>
+            <p> As mentioned previously, you first need to select a file - a file with <b>pageids</b>, for which we
+                will collect coordinates. So, you most likely will just select the file <b>XX_pages.csv</b> you have just collected </p>
+            <p> The second thing you need to do is change the <b> Action </b> to <b> Get coordinates </b>, which just makes a lot
+                of sense </p>
+            <p> Now the <b> File from </b> should be the selected file and the <b> File to </b> should be a new file with
+                coordinates. </p>
+            <div class="note"> The language of the <b> File to </b> will be the same, as the <b> File from </b>
+                and the language input does not change anything. </div>
+            <p> Now - submit.</p>
+
+            <div class="title important"> Getting revisions </div>
+            <p> To get the revision and timestamps, just perform the same actions, as with collection coordinates, but
+                select <b> Get revision authors & timestamps </b> this time </p>
+        </div>
+
+        <div class="title"> Clearing coordinates </div>
+        <div class="container">
+            <p> Suppose, we have collected all the pages and parsed the coordinates for them. But, as you might have
+                guessed, not every page has geographic coordinates corresponding to it. That is where clearing
+                coordinates comes into place. </p>
+            <p> It looks through all the pages and removes those, that do not have coordinates - and saves it all
+                into a new file. </p>
+            <p> The controls look something like this: </p>
+            <div class="example">
+                <div class="title"> Change existing file </div>
+                <div class="controls">
+                    <div class="horizontal">
+                        <label style="margin-bottom: 0"> File: <input type=text disabled value="myFile.csv"> </label>
+                    </div>
+                    <button style="width: 200px;""> Clear coordinates </button>
+                </div>
+            </div>
+            <p> This makes the file smaller, so it will load faster and the program will process it faster.</p>
+            <div class="note">
+                <p> If you clear the coordinates and then select the cleared file and get revisions for it,
+                    you might save some time, as you won't need to get revisions for pages without coordinates.</p>
+            </div>
+        </div>
+
+        <div class="title"> Merging files </div>
+        <div class="container">
+            <p> Now, that you have collected all the data you need, you will have 2 separate files with most important
+                data: <b>XX_coordinates.csv</b> and <b> XX_revisions.csv </b> (or with some other names - but one
+                having the coordinates and one with revisions. </p>
+            <p> The problem is they are separated and you can't display them at the same time. </p>
+            <p> But you can merge them. Just select both files and then press the merge button. A new file (like
+                <b>XX_all_data.csv</b>) will be created.</p>
+
+            <div class="example">
+                <div class="title"> Merge files </div>
+                <div class="controls">
+                    <button style="width: 200px;"> Merge all files </button>
+                </div>
+            </div>
+
+            <p> Now open your new file and enjoy the map of Wikipedia with all its features.</p>
+            <div class="note">
+                <p> This feature can also be used to combine files, that both have the same type of data, but
+                    different pages. For example, you can merge files with pages from Ukrainian and English
+                    Wikipedia versions. Now, both of them can be displayed at the same time on map (But won't
+                    be able to distinguish them).</p>
+            </div>
+        </div>
+
     </div>
-    
+
     <script src="file/docs.js"></script>
+    <script>
+        examples = document.getElementsByClassName('example');
+        // First example file
+        var exampleFile = {'name': 'my_file.csv',
+            'pageid': true, 'title': true, 'coordinates': true};
+        var exampleFile2 = {'name': 'my_file_2.csv'};
+
+        examples[0].appendChild(createFile(exampleFile));
+        examples[1].appendChild(createFileDescription(exampleFile));
+
+        container1 = createFileContainer([exampleFile, exampleFile2], 'add');
+        container2 = createFileContainer([], 'remove');
+        examples[2].appendChild(container1);
+        examples[3].appendChild(container2);
+        container1.onclick = container2.add;
+        container2.onclick = container2.remove;
+
+        document.getElementsByClassName('controls')[0].onchange = function(){
+            var file = '.csv';
+            var checkbox = document.getElementsByName('actionInput');
+            if(checkbox[0].checked) file = '_pages.csv';
+            if(checkbox[1].checked) file = '_coordinates.csv';
+            if(checkbox[2].checked) file = '_revisions.csv';
+
+
+            document.getElementById('toInput').value =
+                document.getElementById('languageInput').value + file;
+        }
+    </script>
 </body>
 </html>

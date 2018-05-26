@@ -48,8 +48,9 @@ def files():
     return json.dumps(get_all_files())
 
 
+@app.route('/map/')
 @app.route('/map/<file_name>')
-def get_map(file_name):
+def get_map(file_name=None):
     return get_data('topographic_improved_design.html')
 
 
