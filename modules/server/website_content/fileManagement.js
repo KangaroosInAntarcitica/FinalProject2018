@@ -3,7 +3,9 @@ var content = document.getElementsByClassName('content')[0];
 
 var settings = {
     fileElements: {'Pages': ['pageid', 'title'], 'Coordiantes': 'coordinates',
-        'Authors': 'user', 'Timestamp': 'timestamp'},
+        'Authors': 'user', 'Timestamp': 'timestamp',
+        'Finished': '', 'Requests': '',
+        'Pages now': '', 'Pages max': ''},
     globalDescription: null
 };
 
@@ -21,17 +23,23 @@ function createFileDescription(file){
     name.innerText = file.name || 'File name';
     description.appendChild(name);
 
-
-    for(var i in settings.fileElements){
+    var i = 0;
+    for(var item in settings.fileElements){
         var new_data = document.createElement('div');
         new_data.classList.add('horizontal');
         new_data.appendChild(document.createElement('div'));
         new_data.children[0].classList.add('descriptionItem');
-        new_data.children[0].innerText = i;
+        new_data.children[0].innerText = item;
         new_data.appendChild(document.createElement('div'));
         new_data.children[1].classList.add('descriptionItem');
 
+        if(i >= 4){
+            new_data.children[0].classList.add('unfinishedItem');
+            new_data.children[1].classList.add('unfinishedItem');
+        }
+
         description.appendChild(new_data);
+        i++;
     }
 
     var button = document.createElement('button');
@@ -51,10 +59,16 @@ function changeFileDescription(file, description){
     name.innerText = file.name || 'File name';
 
     var children = description.getElementsByClassName('descriptionItem');
-    console.log(children);
+    var horizontal = description.getElementsByClassName('horizontal');
+
+    var displayUnfinished = file.not_finished ? 'flex' : 'none';
+    for(var i = 4; i < horizontal.length; i++){
+        horizontal[i].style.display = displayUnfinished;
+    }
+
     var elements = settings.fileElements;
     var elementNames = Object.getOwnPropertyNames(elements);
-    for(var i = 0; i < elementNames.length; i++){
+    for(i = 0; i < elementNames.length; i++){
         var key = elementNames[i];
         elements[key] = elements[key] instanceof Array ?
             elements[key] : [elements[key]];
@@ -62,10 +76,19 @@ function changeFileDescription(file, description){
 
         children[i * 2].innerText = elementNames[i];
         children[i * 2 + 1].innerText = fileHas ? 'true' : 'false';
+        if(i > 3) children[i * 2 + 1].innerText = fileHas ? file[elements[0]] : 'Unknown';
     }
 
+    // custom for unfinished
+    children[9].innerText = file.not_finished ? 'false' : 'true';
+    children[11].innerText = file.count;
+    children[13].innerText = file.current_page;
+    children[15].innerText = file.max_page;
+    horizontal[6].style.display = file.current_page ? displayUnfinished : 'none';
+    horizontal[7].style.display = file.max_page ? displayUnfinished : 'none';
+
     var button = description.getElementsByTagName('button')[0];
-    button.onclick = location.assign.bind(this, '/map/' + file.name);
+    button.onclick = function(){ location.assign('/map/' + file.name); };
 
     return description;
 }
@@ -135,6 +158,7 @@ function createFile(file, button, buttonClick){
     var new_element = document.createElement('div');
     new_element.innerText = file.name || 'File name';
     new_element.classList.add('file');
+    if(file.not_finished) new_element.classList.add('unfinished');
 
     if(buttonClick)
         new_button.onclick = buttonClick.bind(this, new_element, file);
@@ -147,7 +171,6 @@ function createFile(file, button, buttonClick){
     return new_container;
 }
 
-
 function createFileContainer(files, button) {
     var fileContainer = document.createElement('div');
     fileContainer.style.display = 'flex';
@@ -156,18 +179,24 @@ function createFileContainer(files, button) {
     fileContainer.files = files || [];
 
     fileContainer.buttonClick = (function(fileElement, file){
-        fileContainer.onclick(fileElement, file);
+        fileContainer.clickFunction(fileElement, file);
     }).bind(fileContainer);
 
     fileContainer.update = (function(files){
         files = files || this.files;
+        this.files = files;
         // Clear the files
-        console.log(files);
         files = files.filter(function(item){
             var name = item.name;
             var length = item.name.length;
             return name.slice(length - 4, length).toLowerCase() === '.csv'
         });
+        var finished = [], unfinished = [];
+        for(file of files){
+            if(file.not_finished) unfinished.push(file);
+            else finished.push(file);
+        }
+        files = [...finished, ...unfinished];
 
         this.innerHTML = '';
         if(files.length === 0){
@@ -184,7 +213,7 @@ function createFileContainer(files, button) {
     fileContainer.update(fileContainer.files);
 
     fileContainer.add = (function(fileElement, file){
-        console.log(fileElement, file);
+        console.log(file);
         if(! this.files.some(function(item){ return item.name === file.name; }))
             this.files.push(file);
         this.update(this.files);

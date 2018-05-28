@@ -3,395 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="file/mainStyle.css">
     <title> WikiNG Docs </title>
-
-    <style>
-        body {
-            width: 100%;
-            margin: 0;
-            background-color: #37414a;
-            font-family: 'Montserrat', sans-serif;
-            height: 100%;
-
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-
-            margin-bottom: 20px;
-        }
-
-        .content {
-            width: 100%;
-            max-width: 800px;
-            min-width: 600px;
-            padding-left: 10px;
-            padding-right: 10px;
-            transition: 0.2s;
-            position: relative;
-        }
-        header {
-            width: 100%;
-            height: 150px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #FFF8;
-            color: #37414a;
-            font-size: 80px;
-
-            border-bottom: 3px solid #37414a;
-        }
-        header > div {
-            font-size: 20px;
-            color: #37414a88;
-        }
-        .menu{
-            width: calc(100% - 4px);
-            height: 40px;
-            border: 2px solid #FFF8;
-
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
-        .menu > div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 40px;
-            padding-left: 15px;
-            padding-right: 15px;
-
-            background-color: #FFF0;
-            color: #FFF;
-            font-size: 24px;
-            font-weight: 300;
-
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .menu > div:hover {
-            background-color: #FFF8;
-            color: #37414a;
-        }
-
-        .title {
-            width: calc(100% - 40px);
-            padding-left: 20px;
-            padding-right: 20px;
-            font-size: 40px;
-            color: #69e0e4;
-            font-weight: 300;
-
-            margin-top: 16px;
-            margin-bottom: 10px;
-        }
-
-        .fileDescription {
-            width: 280px;
-            padding: 10px;
-
-            background-color: #FFF;
-            color: #FFF;
-            border-radius: 4px;
-
-            transition: opactiy 0.2s;
-        }
-        .fileDescription .name {
-            width: 100%;
-            margin: 2px;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-
-            font-size: 26px;
-            color: #37414a;
-            font-weight: 400;
-
-            overflow-x: hidden;
-        }
-        .fileDescription .horizontal {
-            width: 100%;
-            margin: 2px;
-
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-        .descriptionItem {
-            color: #37414a;
-            font-size: 18px;
-        }
-        .descriptionItem:nth-of-type(1n) {
-            width: 180px;
-            margin-left: 10px;
-        }
-        .descriptionItem:nth-of-type(2n) {
-            margin-right: 10px;
-            font-weight: 800;
-        }
-        .fileDescription > button {
-            width: 260px;
-            margin: 10px;
-            height: 30px;
-            border-radius: 4px;
-
-            font-weight: 400;
-            font-size: 20px;
-
-            background-color: #69e0e4;
-            color: #FFF;
-            border: none;
-            outline: none;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-        .fileDescription > button:hover {
-            opacity: 0.6;
-        }
-
-        .fileContainer {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-        }
-        .file {
-            border: 1px solid #FFF8;
-            background-color: #FFF1;
-            color: #FFF;
-            font-size: 20px;
-            font-weight: 400;
-            padding: 4px;
-
-            margin: 2px;
-            margin-left: 2px;
-            cursor: pointer;
-
-            border-radius: 4px;
-        }
-        .file:hover {
-            background-color: #FFF2;
-        }
-        .file.selected {
-            background-color: #FFF;
-            color: #37414a;
-        }
-        .addFile {
-            width: 34px;
-            height: 34px;
-            border: 1px solid #FFF8;
-            background-color: #FFF1;
-            color: #FFF;
-            font-size: 20px;
-            font-weight: 800;
-
-            margin: 2px;
-            margin-left: 10px;
-            cursor: pointer;
-
-            border-radius: 4px;
-            outline: none;
-        }
-        .addFile:hover {
-            background-color: #FFF;
-            color: #37414a;
-        }
-        .emptyFile {
-            border: 1px dotted #FFF4;
-            background-color: #FFF0;
-            color: #FFF4;
-            font-size: 20px;
-            font-weight: 400;
-            padding: 4px;
-
-            margin: 2px;
-            margin-left: 10px;
-            cursor: inherit;
-
-            border-radius: 4px;
-        }
-
-        .container {
-            width: calc(100% - 36px);
-            border-left: 3px solid #69e0e4;
-            border-right: 3px solid #69e0e4;
-
-            padding-left: 20px;
-            padding-right: 10px;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-
-            font-size: 16px;
-            font-weight: 400;
-            color: #FFFA;
-        }
-        .container .title {
-            padding: 5px;
-            margin: 0;
-            margin-left: 10px;
-            color: #FFF;
-            font-weight: 800;
-            font-size: 20px;
-        }
-        .container .title.important {
-            margin-left: 0;
-            padding-left: 0;
-            font-weight: 800;
-            font-size: 26px;
-            color: #aefcff;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-
-            padding-top: 2px;
-            padding-bottom: 2px;
-        }
-        .container p {
-            padding-bottom: 6px;
-            padding-top: 6px;
-            margin: 0;
-        }
-        .container b {
-            font-weight: 600;
-            color: #FFF;
-        }
-
-        .container .example {
-            padding: 10px;
-            border: 2px dotted #FFF4;
-
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            margin-left: 50px;
-
-            border-radius: 4px;
-        }
-        .container .example::before {
-            content: 'Example';
-            font-size: 10px;
-            color: #FFF4;
-            display: block;
-        }
-        .container .note{
-            padding: 10px;
-            border: 2px solid #ff756f;
-
-            margin-left: 50px;
-
-            border-radius: 4px;
-        }
-        .container .note::before {
-            content: '!! NOTE !!';
-            font-size: 10px;
-            color: #ff756f;
-            display: block;
-        }
-
-        .controls {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-
-            margin-left: 30px;
-            margin-right: 30px;
-        }
-        .controls p, .controls label {
-            display: block;
-            font-size: 18px;
-            color: #FFF6;
-            padding: 0;
-            margin: 0;
-            margin-top: 2px;
-            margin-bottom: 4px;
-        }
-        .controls .horizontal, .horizontal {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-
-        .controls input[type=text]{
-            height: 26px;
-            background-color: #FFF0;
-
-            border: 1px solid #FFF0;
-            border-radius: 4px;
-            outline: none;
-
-            padding-left: 5px;
-            padding-right: 5px;
-            color: #FFF;
-            font-size: 20px;
-            font-weight: 300;
-
-            transition: 0.2s;
-
-            margin-left: 10px;
-        }
-        .controls input[type=text]:focus {
-            border: 1px solid #FFF;
-        }
-
-        .controls input[type=radio] {
-            margin-left: 20px;
-            -webkit-appearance: none;
-            outline: none;
-        }
-        .controls input[type=radio]::before {
-            display: block;
-            width: 8px;
-            height: 8px;
-            border: 2px solid #FFF;
-            background-color: #FFF8;
-            border-radius: 8px;
-            content: '';
-        }
-        .controls input[type=radio]:checked::before {
-            background-color: #69e0e4;
-        }
-
-        .controls button {
-            width: 140px;
-            height: 30px;
-            border-radius: 4px;
-
-            font-weight: 400;
-            font-size: 20px;
-
-            background-color: #69e0e4;
-            color: #FFF;
-            border: none;
-            outline: none;
-
-            margin-top: 10px;
-            margin-bottom: 10px;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-        }
-        .controls button:hover {
-            opacity: 0.5;
-        }
-
-    </style>
 </head>
 <body>
     <div class="content">
@@ -550,9 +163,34 @@
             </div>
         </div>
 
+        <div class="title"> Unfinished files </div>
+        <div class="container">
+            <p> Sometimes you do not have enough time to collect all the data in one session. Luckily, you
+                you can just press <b> Ctrl+C </b>, the parsing will stop and all the data will be saved. </p>
+            <p> WikiNG also performs automatic saves after a certain number of requests have been sent. So, if
+                for some reason, the program is not closed properly, you can return to a recent state and continue
+                collecting data. </p>
+            <div class="note"> <p> If you just close the terminal and not with pressing <b> Ctrl+C </b>, the current data won't be
+                saved. However, you will still be able to return to an autosafe performed previously. </p> </div>
+            <p> The files, which weren't finished parsing will have a slighly red background, so you can
+                easily distinguish them. Their description will also have information about data, that is still
+                required to be parsed. </p>
+            <div class="example"></div>
+                <p> The 2 files on top are not finished. The <b> count </b> represents the number of requests,
+                    that have already been sent. The <b> pages now </b> and <b> pages max </b> represent the current and
+                    the required number of pages to be parsed. They are only available for coordinates and revisions.</p>
+                <p> To continue parsing files, you will need to send the request for the same file again. (The parameters
+                    in controls should be the same and <b> file to </b> should be the unfinished file). </p>
+            <div class="note"> <p> You <b>can open</b> unfinished files <b>on map</b>. This won't change them in any way and they
+                    will still be available for further data collection after this.</p>
+                <p> But, it is <b>not recommended</b> to use those files to <b>create new files</b> (like get coordinates from unfinished
+                        pages file. This may result in errors and incomplete data. </p></div>
+            <div></div>
+        </div>
+
     </div>
 
-    <script src="file/docs.js"></script>
+    <script src="file/fileManagement.js"></script>
     <script>
         examples = document.getElementsByClassName('example');
         // First example file
@@ -567,8 +205,8 @@
         container2 = createFileContainer([], 'remove');
         examples[2].appendChild(container1);
         examples[3].appendChild(container2);
-        container1.onclick = container2.add;
-        container2.onclick = container2.remove;
+        container1.clickFunction = container2.add;
+        container2.clickFunction = container2.remove;
 
         document.getElementsByClassName('controls')[0].onchange = function(){
             var file = '.csv';
@@ -580,7 +218,16 @@
 
             document.getElementById('toInput').value =
                 document.getElementById('languageInput').value + file;
-        }
+        };
+
+        var exampleFile3 = {'name': 'uk_all_pages.csv', 'pages': true,
+            'not_finished': true, 'count': 122};
+        var exampleFile4 = {'name': 'uk_coordinates.csv', 'pages': true,
+            'not_finished': true, 'count': 10, 'current_page': 500,
+            'max_page': 5420};
+
+        examples[7].appendChild(createFile(exampleFile3));
+        examples[7].appendChild(createFile(exampleFile4));
     </script>
 </body>
 </html>

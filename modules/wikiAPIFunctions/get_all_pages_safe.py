@@ -8,17 +8,16 @@ from change_path import *
 This code can be used to get all pages for a specific language
 """
 
-FILE = '%s_all_pages_safe.csv'
+FILE = '%s_pages.csv'
 LANG = 'uk'
-STATE_FILE = 'temp.txt'
 
 
-def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
+def get_all_pages(file=None, language=LANG, state_file=None):
     if not (isinstance(language, str) and len(language) == 2):
         raise ValueError('Language should be a 2 char code: en, uk, etc.')
     if not(file is None or isinstance(file, str)):
         raise ValueError('File should be file path string.')
-    if not isinstance(state_file, str):
+    if not (isinstance(state_file, str) or state_file is None):
         raise ValueError('State File should be file path string.')
     file = file if file else FILE % language
 
@@ -43,10 +42,10 @@ def get_all_pages(file=None, language=LANG, state_file=STATE_FILE):
 
     request = wikiAPI.WikiSafeRequest(
         params,
+        language,
         on_response=response,
         state_file=state_file
     )
-    request.language = language
     request.send_all()
 
     response.save()
@@ -65,4 +64,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_all_pages, language='ru')
+    timeit(get_all_pages, language='en')

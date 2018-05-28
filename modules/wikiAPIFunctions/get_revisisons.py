@@ -9,15 +9,14 @@ from change_path import *
 This code can be used to get all pages for a specific language
 """
 
-FILE_FROM = '%s_all_page_coords_clear.csv'
-FILE_TO = '%s_%s_revisions.csv'
+FILE_FROM = '%s_coordinates.csv'
+FILE_TO = '%s_revisions.csv'
 LANG = 'uk'
 DIRECTION = 'older'
-STATE_FILE = 'temp.txt'
 
 
 def get_revisions(file_from=None, file_to=None,
-                  language=LANG, state_file=STATE_FILE, direction=None):
+                  language=LANG, state_file=None, direction=None):
 
     if not (isinstance(language, str) and len(language) == 2):
         raise ValueError('Language should be a 2 char code: en, uk, etc.')
@@ -25,7 +24,7 @@ def get_revisions(file_from=None, file_to=None,
         raise ValueError('File should be file path string.')
     if not (file_to is None or isinstance(file_to, str)):
         raise ValueError('File should be file path string')
-    if not isinstance(state_file, str):
+    if not (isinstance(state_file, str) or state_file is None):
         raise ValueError('State File should be file path string.')
     if not direction in ('older', 'newer', None):
         raise ValueError('Wrong direction %s - can be older or newer'
@@ -35,7 +34,7 @@ def get_revisions(file_from=None, file_to=None,
 
     direction = direction if direction else DIRECTION
     file_from = file_from if file_from else FILE_FROM % language
-    file_to = file_to if file_to else FILE_TO % (language, direction)
+    file_to = file_to if file_to else FILE_TO % language
 
     dataframe = pandas.read_csv(file_from, sep='\t')
     dataframe = dataframe.astype({'pageid': 'int64'})
@@ -70,11 +69,11 @@ def get_revisions(file_from=None, file_to=None,
 
     request = wikiAPI.WikiSafeRequestMultiplePage(
         params,
+        language,
         on_response=response,
         state_file=state_file,
         max=50
     )
-    request.language = language
     request.send_all()
 
     response.save()

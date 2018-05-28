@@ -36,7 +36,7 @@ def parse_coordinates(coordinates):
         return None, None
 
     coordinates = coordinates.split('|')
-    print(coordinates)
+    # print(coordinates)
 
     i = 0
     while i < len(coordinates):
@@ -51,7 +51,7 @@ def parse_coordinates(coordinates):
         else:
             i += 1
 
-    print(coordinates)
+    # print(coordinates)
     lat, long = None, None
 
     if len(coordinates) == 2:

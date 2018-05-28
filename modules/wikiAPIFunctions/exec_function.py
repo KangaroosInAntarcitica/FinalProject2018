@@ -23,18 +23,22 @@ functions = {
 }
 
 
-def run():
+def run(arguments):
     try:
-        if len(sys.argv) > 0:
-            print('Calling: %s(%s)' % (sys.argv[1], ', '.join(sys.argv[2:])))
-            func = functions[sys.argv[1]]
-            func(*sys.argv[2:])
+        if len(arguments) > 0:
+            print('Calling: %s(%s)' % (arguments[1], ', '.join(arguments[2:])))
+            func = functions[arguments[1]]
+            func(*arguments[2:])
     except Exception as error:
-        print(error)
+        print('Error: ', error)
 
-    print('\n\nProcess finished sucessfully!')
+    print('\n\nProcess finished')
     input('Close ---> ')
 
 
+def run_directly(argument_str):
+    run(argument_str.split()[1:])
+
+
 if __name__ == '__main__':
-    run()
+    run(sys.argv)

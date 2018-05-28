@@ -10,14 +10,13 @@ from change_path import *
 This code can be used to get all pages for a specific language
 """
 
-FILE_FROM = '%s_all_pages_safe.csv'
-FILE_TO = '%s_all_page_coords.csv'
+FILE_FROM = '%s_all_pages.csv'
+FILE_TO = '%s_coordinates.csv'
 LANG = 'uk'
-STATE_FILE = 'temp.txt'
 
 
 def get_page_coordinates(file_from=None, file_to=None,
-                  language=LANG, state_file=STATE_FILE):
+                  language=LANG, state_file=None):
 
     if not (isinstance(language, str) and len(language) == 2):
         raise ValueError('Language should be a 2 char code: en, uk, etc.')
@@ -25,7 +24,7 @@ def get_page_coordinates(file_from=None, file_to=None,
         raise ValueError('File should be file path string.')
     if not (file_to is None or isinstance(file_to, str)):
         raise ValueError('File should be file path string')
-    if not isinstance(state_file, str):
+    if not (isinstance(state_file, str) or state_file is None):
         raise ValueError('State File should be file path string.')
     file_from = file_from if file_from else FILE_FROM % language
     file_to = file_to if file_to else FILE_TO % language
@@ -61,9 +60,11 @@ def get_page_coordinates(file_from=None, file_to=None,
 
     response = wikiAPI.WikiResponse(response_table,
                                     custom=custom, file=file_to)
+    print(response)
 
     request = wikiAPI.WikiSafeRequestMultiplePage(
         params,
+        language,
         on_response=response,
         state_file=state_file
     )
@@ -86,4 +87,4 @@ def timeit(func, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    timeit(get_page_coordinates, language='ru')
+    timeit(get_page_coordinates, language='en')

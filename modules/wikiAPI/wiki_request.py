@@ -5,7 +5,7 @@ from .wiki_exceptions import *
 
 
 class WikiRequest:
-    def __init__(self, params, on_response, *args, **kwargs):
+    def __init__(self, params, language, on_response, *args, **kwargs):
         """
         params - request url parameters
         on_response - function or object with update function
@@ -14,7 +14,7 @@ class WikiRequest:
         self.params = dict(PARAMETERS.items() | params.items())
         self.user_agent = USER_AGENT
         self.timeout = TIMEOUT
-        self.language = 'en'
+        self.language = language or 'en'
 
         # continue
         self.resume = True
@@ -34,7 +34,6 @@ class WikiRequest:
         will continue the previous request)
         """
         # predefine some stuff
-        self.resume = False
         headers = {'User-Agent': USER_AGENT}
 
         response = requests.get(self.get_url(),
@@ -67,15 +66,20 @@ class WikiRequest:
             self.count += 1
 
         # check whether continue available
-        if not('batchcomplete' in response and response['batchcomplete']):
-            if 'continue' in response and response['continue']:
-                # set the continue to required parameters and resume to True
-                self.resume = True
-                for key, value in response['continue'].items():
-                    self.params[key] = value
+        if 'batchcomplete' in response and response['batchcomplete']:
+            self.resume = False
+
+        if 'continue' in response and response['continue']:
+            # set the continue to required parameters and resume to True
+            for key, value in response['continue'].items():
+                self.params[key] = value
+        else:
+            self.resume = False
 
     def send_all(self):
-        print('Started sending requests!')
+        print('\nStarted sending requests!')
+        print('[To stop press Ctrl+C one time - all the data will be saved if '
+              'in safe mode!] \n')
 
         while self.resume:
             print('\rRequest #%7.0d' % self.count, end='')
@@ -85,7 +89,7 @@ class WikiRequest:
 
 
 class WikiRequestMultiplePage(WikiRequest):
-    def __init__(self, params, on_response, max=50, *args, **kwargs):
+    def __init__(self, params, language, on_response, max=50, *args, **kwargs):
         """
         Initialises the wiki request with functionality to send repuests
         for multiple pages
@@ -103,7 +107,7 @@ class WikiRequestMultiplePage(WikiRequest):
 
         self.current_page = 0
         self.max = max
-        super().__init__(params, on_response)
+        super().__init__(params, language, on_response, language)
 
     def send(self):
         """
@@ -126,3 +130,15 @@ class WikiRequestMultiplePage(WikiRequest):
         self.current_page += self.max
         if self.current_page < len(self.multiple_params):
             self.resume = True
+
+    def send_all(self):
+        print('Started sending requests!')
+        length = self.multiple_params.size
+        print(length)
+
+        while self.resume:
+            print('\rRequest #%7.0d (%d of %d)' %
+                  (self.count, self.count * 50, length + 1), end='')
+            self.send()
+
+        print('\n')

@@ -291,7 +291,7 @@ function resetSelection(){
     mapContent.selectedData = mapContent.allData;
     settings.selectLimitation = false;
 
-    filterAuthors()
+    filterAuthors();
 }
 
 /* FILTERING AUTHORS */
@@ -301,18 +301,21 @@ function filterAuthors(){
     var filterUsers = document.getElementById('filterAuthorsUsers').checked;
     var filterAnonymous = document.getElementById('filterAuthorsAnonymous').checked;
 
+    console.log('here');
     // user, anon, userhidden
     var user_i = mapContent.header['user'];
     var anon_i = mapContent.header['anon'];
     var userhidden_i = mapContent.header['userhidden'];
     var color_i = (settings.colorType === 'authors') && mapContent.header.color;
 
-    if(!(userhidden_i !== undefined && anon_i !== undefined && user_i !== undefined)){
+    if(user_i === undefined){
         mapContent.filteredData = mapContent.selectedData;
         enableControls('mapFilterControls', false);
         setTime();
         return null;
-    } else { enableControls('mapFilterControls', true); }
+    } else {
+        enableControls('mapFilterControls', true);
+    }
 
     var result = [];
     for(var i = 0; i < mapContent.selectedData.length; i++){
